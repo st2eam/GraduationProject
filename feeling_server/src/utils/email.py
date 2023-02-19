@@ -6,13 +6,14 @@ from email.header import Header
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+from ...env import EMAIL_USERNAME, EMAIL_TOKEN
 
 
 def sendEmail(sender: str, msg: str, receivers: str):
     # 第三方 SMTP 服务
     mail_host = "smtp.qq.com"  # 设置服务器
-    mail_user = "379403404@qq.com"  # 用户名
-    mail_pass = "wkbtixiqdpuvbhaj"  # 口令
+    mail_user = EMAIL_USERNAME  # 用户名
+    mail_pass = EMAIL_TOKEN  # 口令
 
     message = MIMEMultipart('related')
     message['From'] = Header("Feeling", 'utf-8')

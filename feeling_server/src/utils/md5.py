@@ -1,11 +1,9 @@
 import hashlib
-
-
-SALT = b'f7b44cfafd5c52223d5498196c8a2e7b'
+from ...env import MD5_SALT
 
 
 def md5(password: str):
-    obj = hashlib.md5(SALT)
+    obj = hashlib.md5(MD5_SALT)
     obj.update(password.encode('utf-8'))
     secret = obj.hexdigest()
     return secret

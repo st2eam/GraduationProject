@@ -1,11 +1,10 @@
 import random
 from flask import Blueprint, jsonify, request
 from schema import Schema, Regex, SchemaError
-
 from ..models import ApiResp, JsonResp, ServiceError
 from ..utils.email import sendEmail
 from ..services import user_service, session_service
-
+from ...env import EMAIL_USER
 bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
@@ -84,5 +83,5 @@ def email():
         response = jsonify(ServiceError(message="邮箱格式不正确", status=400))
         response.status_code = 400
         return response
-    sendEmail("379403404@qq.com", num, user_email)
+    sendEmail(EMAIL_USER, num, user_email)
     return jsonify(ApiResp(data=num, status=200, message="ok"))
