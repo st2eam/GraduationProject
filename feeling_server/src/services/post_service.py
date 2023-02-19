@@ -48,3 +48,28 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
     # 此处需要添加通知
     # =====================================
     return str(res.inserted_id)
+
+
+def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
+    userId = session_service.getSessionBySid(token)['userId']
+    post = get_collection('posts').find_one_and_update(
+        {'_id': ObjectId(relationId)}, {'$inc': {'forwards': 1}})
+    check(post, PostErrorStat.ERR_POST_NOT_FOUND)
+    check(post['type'] != EPostType.Delete.value,
+          PostErrorStat.ERR_POST_HAS_BEEN_DELETED)
+    forward = bsonify(IPost(
+        userId=userId,
+        relationId=ObjectId(relationId),
+        type=EPostType.Forward.value,
+        imgs=imgs,
+        content=content,
+        likes=0,
+        comments=0,
+        forwards=0,
+        createdAt=time.time(),
+    ))
+    res = get_collection('posts').insert_one(forward)
+    # =====================================
+    # 此处需要添加通知
+    # =====================================
+    return str(res.inserted_id)
