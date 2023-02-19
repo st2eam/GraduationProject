@@ -29,9 +29,9 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
     userId = session_service.getSessionBySid(token)['userId']
     post = get_collection('posts').find_one_and_update(
         {'_id': ObjectId(relationId)}, {'$inc': {'comments': 1}})
-    check(post, PostErrorStat.ERR_POST_NOT_FOUND)
+    check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
-          PostErrorStat.ERR_POST_HAS_BEEN_DELETED)
+          PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
     comment = bsonify(IPost(
         userId=userId,
         relationId=ObjectId(relationId),
@@ -54,9 +54,9 @@ def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
     userId = session_service.getSessionBySid(token)['userId']
     post = get_collection('posts').find_one_and_update(
         {'_id': ObjectId(relationId)}, {'$inc': {'forwards': 1}})
-    check(post, PostErrorStat.ERR_POST_NOT_FOUND)
+    check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
-          PostErrorStat.ERR_POST_HAS_BEEN_DELETED)
+          PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
     forward = bsonify(IPost(
         userId=userId,
         relationId=ObjectId(relationId),
