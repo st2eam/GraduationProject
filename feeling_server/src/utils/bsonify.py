@@ -1,5 +1,6 @@
 from flask import json
+import bson.json_util
 
 
 def bsonify(data):
-    return json.loads(json.dumps(data))
+    return bson.json_util.loads(json.dumps(data))

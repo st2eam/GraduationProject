@@ -1,4 +1,6 @@
 from flask import Blueprint
+
+
 bp = Blueprint('notify', __name__, url_prefix='/api/notify')
 
 

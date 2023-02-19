@@ -1,4 +1,9 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
+from schema import Schema
+from ..models import ApiResp
+from ..services import post_service
+
+
 bp = Blueprint('post', __name__, url_prefix='/api/post')
 
 
@@ -15,7 +20,14 @@ def get_follow_post():
 # =====================================
 @bp.route('/create_post', methods=["POST"])
 def create_post():
-    return 'Hello create_post!'
+    data = Schema({
+        'content': str,
+        'imgs': [str],
+    }).validate(request.json)
+    token = request.cookies.get('token')
+    res = post_service.create_post(
+        token=token, content=data['content'], imgs=data['imgs'])
+    return jsonify(ApiResp(data=res, status=200, message="ok"))
 
 
 # =====================================
@@ -23,7 +35,15 @@ def create_post():
 # =====================================
 @bp.route('/create_comment', methods=["POST"])
 def create_comment():
-    return 'Hello create_comment!'
+    data = Schema({
+        'relationId': str,
+        'content': str,
+        'imgs': [str]
+    }).validate(request.json)
+    token = request.cookies.get('token')
+    res = post_service.create_comment(
+        token=token, relationId=data['relationId'], content=data['content'], imgs=data['imgs'])
+    return jsonify(ApiResp(data=res, status=200, message="ok"))
 
 
 # =====================================

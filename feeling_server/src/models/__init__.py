@@ -13,14 +13,15 @@ class JsonResp:
         self.message = message
 
 
-class JsonEcoder(json.JSONEncoder):
-
+class JsonEncoder(json.JSONEncoder):
     def __init__(self, **kwargs):
         kwargs['ensure_ascii'] = False
-        super(JsonEcoder, self).__init__(**kwargs)
+        super(JsonEncoder, self).__init__(**kwargs)
 
     def default(self, obj):
-        return obj.__dict__
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        return vars(obj)
 
 
 class ApiResp(JsonResp):
@@ -126,15 +127,25 @@ class IConversation:
 
 
 class IPost:
-    userId: str
-    relationId: ObjectId  # 如果是评论则为评论id，如果是转发则为转发id
-    type: EPostType
-    imgs: list[str]
-    content: str
-    likes: int
-    comments: int
-    forwards: int
-    createdAt: float
+    def __init__(self,
+                 userId: str,
+                 relationId: ObjectId,  # 如果是评论则为评论id，如果是转发则为转发id
+                 type: EPostType,
+                 imgs: list[str],
+                 content: str,
+                 likes: int,
+                 comments: int,
+                 forwards: int,
+                 createdAt: float):
+        self.userId = userId
+        self.relationId = relationId
+        self.type = type
+        self.imgs = imgs
+        self.content = content
+        self.likes = likes
+        self.comments = comments
+        self.forwards = forwards
+        self.createdAt = createdAt
 
 
 class IDirectMsg:
