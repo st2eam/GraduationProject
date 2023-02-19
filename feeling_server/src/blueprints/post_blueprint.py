@@ -51,7 +51,15 @@ def create_comment():
 # =====================================
 @bp.route('/create_forward', methods=["POST"])
 def create_forward():
-    return 'Hello create_forward!'
+    data = Schema({
+        'relationId': str,
+        'content': str,
+        'imgs': [str]
+    }).validate(request.json)
+    token = request.cookies.get('token')
+    res = post_service.create_forward(
+        token=token, relationId=data['relationId'], content=data['content'], imgs=data['imgs'])
+    return jsonify(ApiResp(data=res, status=200, message="ok"))
 
 
 # =====================================
