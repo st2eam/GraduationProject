@@ -8,7 +8,7 @@ class JsonResp:
     status: int
     message: str
 
-    def __init__(self, status: int, message: str):
+    def __init__(self, status=200, message='ok'):
         self.status = status
         self.message = message
 
@@ -28,7 +28,7 @@ class ApiResp(JsonResp):
 
     data: any
 
-    def __init__(self, data: any, status: int, message: str):
+    def __init__(self, data: any, status=200, message='ok'):
         self.data = data
         self.status = status
         self.message = message
@@ -110,9 +110,13 @@ class IUser:
 
 
 class ILikes:
-    postId: ObjectId
-    userId: str
-    createdAt: float
+    def __init__(self,
+                 postId: ObjectId,
+                 userId: str,
+                 createdAt: float):
+        self.postId = postId
+        self.userId = userId
+        self.createdAt = createdAt
 
 
 class IFollow:

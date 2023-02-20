@@ -35,6 +35,8 @@ class PostErrorStat(Enum):
         status=404, code=30002, message='帖子已删除')
     ERR_POST_HAS_BEEN_LIKED = ServiceError(
         status=400, code=30003, message='该帖子已点赞')
+    ERR_LIKE_NOT_FOUND = ServiceError(
+        status=404, code=30004, message='点赞信息未找到')
 
 
 class NotifyErrorStat(Enum):

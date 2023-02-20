@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from schema import Schema
-from ..models import ApiResp
+from ..models import ApiResp, JsonResp
 from ..services import post_service
 
 
@@ -8,11 +8,11 @@ bp = Blueprint('post', __name__, url_prefix='/api/post')
 
 
 # =====================================
-# @description 聚合查询关注的人的帖子，按时间排序
+# @description 帖子推荐
 # =====================================
-@bp.route('/get_follow_post', methods=["GET"])
-def get_follow_post():
-    return 'Hello get_follow_post!'
+@bp.route('/recommend', methods=["GET"])
+def get_postlist():
+    return 'Hello recommend!'
 
 
 # =====================================
@@ -27,7 +27,7 @@ def create_post():
     token = request.cookies.get('token')
     res = post_service.create_post(
         token=token, content=data['content'], imgs=data['imgs'])
-    return jsonify(ApiResp(data=res, status=200, message="ok"))
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================
@@ -43,7 +43,7 @@ def create_comment():
     token = request.cookies.get('token')
     res = post_service.create_comment(
         token=token, relationId=data['relationId'], content=data['content'], imgs=data['imgs'])
-    return jsonify(ApiResp(data=res, status=200, message="ok"))
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================
@@ -59,15 +59,15 @@ def create_forward():
     token = request.cookies.get('token')
     res = post_service.create_forward(
         token=token, relationId=data['relationId'], content=data['content'], imgs=data['imgs'])
-    return jsonify(ApiResp(data=res, status=200, message="ok"))
+    return jsonify(ApiResp(ApiResp(data=res)))
 
 
 # =====================================
 # @description 获取帖子详情
 # =====================================
-@bp.route('/get_post_detail', methods=["GET"])
-def get_post_detail():
-    return 'Hello get_post_detail!'
+@bp.route('/get_detail', methods=["GET"])
+def get_detail():
+    return 'Hello get_detail!'
 
 
 # =====================================
@@ -83,7 +83,12 @@ def get_comments():
 # =====================================
 @bp.route('/like', methods=["POST"])
 def like():
-    return 'Hello like!'
+    data = Schema({
+        'id': str
+    }).validate(request.json)
+    token = request.cookies.get('token')
+    res = post_service.like(id=data['id'], token=token)
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================
@@ -91,7 +96,12 @@ def like():
 # =====================================
 @bp.route('/unlike', methods=["POST"])
 def unlike():
-    return 'Hello unlike!'
+    data = Schema({
+        'id': str
+    }).validate(request.json)
+    token = request.cookies.get('token')
+    res = post_service.unlike(id=data['id'], token=token)
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================
@@ -99,4 +109,8 @@ def unlike():
 # =====================================
 @bp.route('/delete', methods=["POST"])
 def delete():
-    return 'Hello delete!'
+    data = Schema({
+        'id': str
+    }).validate(request.json)
+    post_service.delete(id=data['id'])
+    return jsonify(JsonResp())
