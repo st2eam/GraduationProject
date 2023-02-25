@@ -12,7 +12,7 @@ bp = Blueprint('post', __name__, url_prefix='/api/post')
 # =====================================
 @bp.route('/recommend', methods=["GET"])
 def get_postlist():
-    return 'Hello recommend!'
+    return
 
 
 # =====================================

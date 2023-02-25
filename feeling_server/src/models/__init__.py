@@ -137,6 +137,8 @@ class IPost:
                  type: EPostType,
                  imgs: list[str],
                  content: str,
+                 classify: str,
+                 label: dict,
                  likes: int,
                  comments: int,
                  forwards: int,
@@ -146,6 +148,8 @@ class IPost:
         self.type = type
         self.imgs = imgs
         self.content = content
+        self.classify = classify
+        self.label = label
         self.likes = likes
         self.comments = comments
         self.forwards = forwards

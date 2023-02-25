@@ -6,9 +6,18 @@ from ..utils.check import *
 from ..utils.bsonify import *
 from ..database import get_collection
 from ..services import session_service
+from ..bert import NER_MAIN, TextClassifier_MAIN
+
+ner_class_list = ['address', 'book', 'company', 'game', 'goverment',
+                  'movie', 'name', 'organization', 'position', 'scene']
+
+classify_class_list = ['财经', '房产', '股票', '教育', '科技',
+                       '社会', '时政', '体育', '游戏', '娱乐']
 
 
 def create_post(token: str, content: str, imgs: list[str]):
+    result_Classify = TextClassifier_MAIN.predict([content])[0]
+    result_NER = NER_MAIN.pos_predict([content])[0]["label"]
     userId = session_service.getSessionBySid(token)['userId']
     post = bsonify(IPost(
         userId=userId,
@@ -16,6 +25,8 @@ def create_post(token: str, content: str, imgs: list[str]):
         type=EPostType.Post.value,
         imgs=imgs,
         content=content,
+        classify=result_Classify,
+        label=result_NER,
         likes=0,
         comments=0,
         forwards=0,
