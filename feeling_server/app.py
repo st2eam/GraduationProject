@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from flask import Flask, jsonify
-from src.blueprints import auth_blueprint, user_blueprint, notify_blueprint, post_blueprint, search_blueprint
+from src.blueprints import auth_blueprint, user_blueprint, notice_blueprint, post_blueprint, search_blueprint
 from src.models import ServiceError, JsonEncoder
 from src import database
 from schema import SchemaError
@@ -11,7 +11,7 @@ load_dotenv(verbose=True)
 app.json_encoder = JsonEncoder
 app.register_blueprint(auth_blueprint.bp)
 app.register_blueprint(user_blueprint.bp)
-app.register_blueprint(notify_blueprint.bp)
+app.register_blueprint(notice_blueprint.bp)
 app.register_blueprint(post_blueprint.bp)
 app.register_blueprint(search_blueprint.bp)
 

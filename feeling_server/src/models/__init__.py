@@ -69,10 +69,20 @@ class EMsgStatus(Enum):
     Deleted = auto()
 
 
-class ENotifyType(Enum):
+class ENoticeType(Enum):
     Follow = auto()
     Comment = auto()
     Forward = auto()
+
+
+class IPagination:
+    def __init__(self,
+                 prev: str,
+                 next: str,
+                 limit: int):
+        self.prev = prev
+        self.next = next
+        self.limit = limit
 
 
 class ISession:
@@ -107,6 +117,24 @@ class IUser:
         self.bio = bio
         self.createdAt = createdAt
         self.status = status
+
+
+class UserData:
+    def __init__(self,
+                 userId: str,
+                 like: dict,
+                 read:  dict,
+                 follow: dict,
+                 comment:  dict,
+                 forward:  dict,
+                 search: dict):
+        self.userId = userId
+        self.read = read
+        self.like = like
+        self.follow = follow
+        self.search = search
+        self.comment = comment
+        self.forward = forward
 
 
 class ILikes:
@@ -167,11 +195,19 @@ class IDirectMsg:
     status: EMsgStatus
 
 
-class INotify:
-    type: ENotifyType
-    senderId: str
-    receiverId: str
-    relationId: ObjectId  # 如果没有relationId 回复会多一层判断
-    content: str  # content内容：回复存senderId 发的新的贴子_id
-    sendTime: int
-    status: EMsgStatus
+class INotice:
+    def __init__(self,
+                 type: ENoticeType,
+                 senderId: str,
+                 receiverId: str,
+                 relationId: ObjectId,  # 如果没有relationId 回复会多一层判断
+                 content: str,  # content内容：回复存senderId 发的新的贴子_id
+                 createdAt: float,
+                 status: EMsgStatus):
+        self.type = type
+        self.senderId = senderId
+        self.receiverId = receiverId
+        self.relationId = relationId
+        self.content = content
+        self.createdAt = createdAt
+        self.status = status
