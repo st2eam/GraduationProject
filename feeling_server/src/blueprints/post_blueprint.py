@@ -112,5 +112,6 @@ def delete():
     data = Schema({
         'id': str
     }).validate(request.json)
-    post_service.delete(id=data['id'])
+    token = request.cookies.get('token')
+    post_service.delete(id=data['id'], token=token)
     return jsonify(JsonResp())
