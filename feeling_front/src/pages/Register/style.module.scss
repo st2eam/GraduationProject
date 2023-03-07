@@ -1,0 +1,70 @@
+.registerWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  .form {
+    :global(.adm-list-item) {
+      padding: 0;
+    }
+    :global(.adm-list-item-content) {
+      padding: 0;
+    }
+
+    :global(.adm-list-card) {
+      margin: 0;
+    }
+    :global(.adm-list-item-content-prefix) {
+      padding: 0; // 设置其他为0
+      width: auto;
+    }
+    :global(.adm-list-item-content-main) {
+      border: 1px solid $primary-color;
+      height: 40px;
+      border-radius: 0px 10px 10px 0px;
+      display: flex;
+    }
+    :global(.adm-form-item-child-inner) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.avatar {
+  --border-radius: 50%;
+  height: $avatar-size;
+  width: $avatar-size;
+}
+
+.nickname {
+  @include text-lg();
+  font-weight: 500;
+}
+
+.userIdPrefix {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px 0 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $primary-color;
+  @include text-lg();
+  color: white;
+  font-family: 700;
+}
+.userIdInput {
+  --text-align: center;
+}
+
+.registerBtn {
+  --border-radius: 10px;
+  background-color: $primary-color;
+  color: white;
+  .registerText {
+    @include text-lg();
+  }
+}

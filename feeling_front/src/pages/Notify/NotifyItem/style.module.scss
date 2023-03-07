@@ -1,0 +1,28 @@
+.outContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 13px 20px;
+  border-top: 1px solid $text-border-color;
+  justify-content: space-between;
+}
+.notifyINfo {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+  flex: auto;
+}
+.notifyType {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 2px;
+}
+.nickname {
+  padding-right: 8px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.confirmText {
+  color: #ff3141;
+}

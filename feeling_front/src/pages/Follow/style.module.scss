@@ -1,0 +1,36 @@
+.followWrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.navBar {
+  --border-bottom: solid 1px #eeeeee;
+  --height: 50px;
+  .nickname {
+    @include navBarTitle();
+  }
+}
+
+.swiperTab {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  .swiper {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .tabs {
+    --active-title-color: #3291ff;
+    --active-line-color: #3291ff;
+    height: $tab-bar-height;
+  }
+}
+
+.content {
+  height: 100%;
+  overflow-y: auto;
+}

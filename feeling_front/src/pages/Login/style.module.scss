@@ -1,0 +1,14 @@
+.loginBtn {
+  background: #00bc0c;
+  color: #fff;
+  .loginBtnContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .wechatIcon {
+    height: 30px;
+    width: 30px;
+  }
+}

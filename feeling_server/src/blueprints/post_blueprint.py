@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from schema import Schema
+from schema import Schema, Optional
 from ..models import ApiResp, JsonResp
 from ..services import post_service
 
@@ -23,10 +23,11 @@ def create_post():
     data = Schema({
         'content': str,
         'imgs': [str],
+        Optional('label'): [str]
     }).validate(request.json)
     token = request.cookies.get('token')
     res = post_service.create_post(
-        token=token, content=data['content'], imgs=data['imgs'])
+        token=token, content=data['content'], imgs=data['imgs'], label=data.get('label'))
     return jsonify(ApiResp(data=res))
 
 

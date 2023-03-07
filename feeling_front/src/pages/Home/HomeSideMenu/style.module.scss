@@ -1,0 +1,66 @@
+.popup {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 30px 50px;
+}
+
+.userBaseInfo {
+  margin-bottom: 16px;
+  word-break: break-all;
+  .avatar {
+    --border-radius: 50%;
+    width: $avatar-size;
+    height: $avatar-size;
+    margin-bottom: 10px;
+  }
+
+  .nickname {
+    @include text-2xl();
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .userId {
+    @include text-lg();
+    color: $text-info-color;
+  }
+}
+
+.userFollowInfo {
+  @include text-base();
+  font-weight: 500;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  .num {
+    font-weight: 600;
+    margin-right: 4px;
+  }
+}
+
+.menuWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+  .menuItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    @include text-lg();
+    font-weight: 500;
+  }
+  .iconBox {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .homeIcon {
+    width: 20px;
+    height: 20px;
+  }
+}

@@ -1,0 +1,30 @@
+.loginWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 0 60px;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .appView {
+    position: absolute;
+    transform: translateY(-120%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .feedText {
+    color: $primary-color;
+    @include text-6xl();
+    font-weight: 700;
+    font-family: '华文琥珀';
+  }
+}

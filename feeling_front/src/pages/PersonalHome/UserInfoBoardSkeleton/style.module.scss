@@ -1,0 +1,20 @@
+$wrapper-padding: 20px; // 左右padding
+
+@mixin userInfoBoardFollowBtn {
+  @include followBtnBase();
+  position: absolute;
+  right: 20px;
+  top: calc(30px + 15px); // 30px 为头像高度一半
+}
+
+.userInfoWrapper {
+  padding: 0 $wrapper-padding;
+  transform: translateY(calc($avatar-size / -2));
+  position: relative;
+  .avatar {
+    width: $avatar-size;
+    height: $avatar-size;
+    border-radius: 50%;
+    margin: 0;
+  }
+}

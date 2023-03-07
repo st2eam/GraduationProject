@@ -1,0 +1,125 @@
+$banner-height: 150px; // 背景图片高度
+$wrapper-padding: 20px; // 左右padding
+
+@mixin navBarBase {
+  height: $nav-bar-height;
+  position: fixed;
+  width: 100vw;
+  z-index: 1;
+  top: 0;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+@mixin iconBoxBase {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+@mixin titleBase {
+  @include navBarTitle();
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+@mixin userInfoBase {
+  padding: 0 $wrapper-padding;
+  transform: translateY(calc($avatar-size / -2));
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.2s ease-in-out;
+}
+
+.personalHomeWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  padding-top: $banner-height;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.banner {
+  position: absolute;
+  width: 100%;
+  height: $banner-height;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.navBar {
+  @include navBarBase();
+  :global(.adm-nav-bar-right) {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .iconBox {
+    @include iconBoxBase();
+    color: #fff;
+    background-color: rgba(#000, 0.5);
+  }
+  .title {
+    @include titleBase();
+  }
+}
+
+.userInfoWrapper {
+  @include userInfoBase();
+}
+
+.swiperTab {
+  transform: translateY(-10px);
+  display: flex;
+  flex-direction: column;
+  .swiper {
+    overflow-y: auto;
+  }
+  .list {
+    height: calc(100vh - $nav-bar-height - $tab-bar-height - $menu-bar-height);
+    overflow-y: hidden;
+  }
+
+  .tabs {
+    --active-title-color: #3291ff;
+    --active-line-color: #3291ff;
+    position: sticky;
+    top: calc($nav-bar-height - $banner-height + 10px);
+    background: #fff;
+    z-index: 1;
+    height: $tab-bar-height;
+  }
+}
+
+// 效果切换
+.viewPost {
+  &.navBar {
+    background-color: #fff;
+  }
+  .iconBox {
+    color: #000;
+    background: #fff;
+  }
+  .title {
+    opacity: 1;
+    visibility: visible;
+  }
+  &.userInfoWrapper {
+    opacity: 0;
+    visibility: hidden;
+  }
+  &.list {
+    overflow-y: auto;
+  }
+}

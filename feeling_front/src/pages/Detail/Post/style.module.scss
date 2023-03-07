@@ -1,0 +1,46 @@
+.postItem {
+  @include text-base;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-top: 0.1px solid rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  margin: 20px 10px 10px 40px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userId {
+  color: $text-info-color;
+}
+
+.nickname {
+  color: #000;
+  font-weight: 700;
+  @include text-lg;
+}
+
+.main {
+  width: 100%;
+  padding: 20px;
+  padding-top: 10px;
+}
+
+.date {
+  margin: 10px;
+  color: $text-info-color;
+  @include text-sm;
+}

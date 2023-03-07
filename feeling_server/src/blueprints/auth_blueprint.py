@@ -1,8 +1,8 @@
 import os
 import random
 from flask import Blueprint, jsonify, request
-from schema import Schema, Regex, SchemaError
-from ..models import ApiResp, JsonResp, ServiceError
+from schema import Schema, Regex, SchemaError, Or
+from ..models import ESexType, ApiResp, JsonResp, ServiceError
 from ..utils.email import sendEmail
 from ..services import user_service, session_service
 
@@ -43,12 +43,14 @@ def register():
         'username': str,
         'password': str,
         'email': str,
+        'sex': Or(ESexType.Female.value, ESexType.Male.value),
         "avatar": str,
         "banner": str
     }).validate(request.json)
     res = user_service.register(username=data['username'],
                                 password=data['password'],
                                 email=data['email'],
+                                sex=data['sex'],
                                 avatar=data['avatar'],
                                 banner=data['banner'])
     return jsonify(ApiResp(data=res, status=200, message="ok"))

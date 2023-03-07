@@ -1,0 +1,79 @@
+@mixin image {
+  margin: -1px -15px 5px -15px;
+  width: auto;
+  display: inline-block;
+  height: 120px;
+}
+
+.ISend {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.FriendSend {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.MessageBox {
+  padding: 6px 19px;
+  margin: 12px 20px;
+  display: inline-flex;
+  flex-direction: column;
+  &.imgMessageBox {
+    width: 100px;
+  }
+}
+.IMsgBox {
+  color: #ffffff;
+  background-color: $primary-color;
+  max-width: 100%;
+  border-radius: 8px 8px 0px 8px;
+  .image {
+    @include image();
+    border-radius: 8px 8px 0px 8px;
+  }
+}
+.FriendMsgBox {
+  background-color: #ffffff;
+  max-width: 100%;
+  border-radius: 8px 8px 8px 0px;
+  .image {
+    @include image();
+    border-radius: 8px 8px 8px 0px;
+  }
+}
+
+.content {
+  align-items: flex-start;
+  padding-bottom: 5px;
+  // padding:4px 21px 5px 19px;
+  // white-space:pre-line;
+  word-break: break-all;
+  font-family: 'Mulish';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  white-space: pre-wrap;
+}
+.sendTime {
+  align-content: flex-end;
+  align-items: center;
+  color: $text-info-color;
+}
+.meSendTime {
+  text-align: right;
+  color: rgba(255, 255, 255, 0.7);
+}
+.friendSendTime {
+  color: #999;
+}
+.delete {
+  padding: 6px 10px;
+}
+.textCenter {
+  text-align: center;
+  color: #aaaaaa;
+}

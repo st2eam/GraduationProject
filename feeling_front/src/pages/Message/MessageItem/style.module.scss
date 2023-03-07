@@ -1,0 +1,47 @@
+.outContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 13px 20px;
+  border-top: 1px solid $text-border-color;
+  justify-content: space-between;
+}
+.messageRight {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+  flex: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.messageTop {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 5px;
+  justify-content: space-between;
+}
+.nickname {
+  padding-right: 8px;
+  font-weight: 700;
+  font-size: 16px;
+}
+.nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: auto;
+}
+.messageInfo {
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.unreadCount {
+  flex: none;
+}
+.confirmText {
+  color: #ff3141;
+}

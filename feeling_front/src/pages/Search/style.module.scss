@@ -1,0 +1,24 @@
+.searchWrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+.nav {
+  height: $nav-bar-height;
+}
+
+.swiperTabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .swiper {
+    flex: 1;
+    overflow-y: auto;
+  }
+}
+
+.list {
+  overflow-y: auto;
+}

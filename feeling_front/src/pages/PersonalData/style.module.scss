@@ -1,0 +1,52 @@
+$banner-height: 15%; // 背景图片高度
+
+.personalDataWrapper {
+  height: 100%;
+  width: 100%;
+}
+
+.navBar {
+  --height: 50px;
+  .save {
+    @include text-lg();
+  }
+  .title {
+    @include text-xl();
+    font-weight: 600;
+  }
+}
+
+.banner {
+  width: 100%;
+  height: 15%;
+  color: #fff;
+}
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: translateX(36px) translateY(-50%);
+  color: #fff;
+}
+
+.userForm {
+  margin-top: 10px;
+  :global(.adm-list-item-content-prefix) {
+    --prefix-width: 5rem;
+  }
+}
+
+.nickname {
+  --color: #3291ff;
+}
+
+.bio {
+  --color: #3291ff;
+}
+
+.limit {
+  width: 100%;
+  text-align: right;
+  color: $text-info-color;
+}

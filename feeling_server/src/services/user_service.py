@@ -4,7 +4,7 @@ import uuid
 from ..utils.md5 import *
 from ..utils.check import *
 from ..utils.bsonify import *
-from ..models import EUserStatus, IUser, ISession
+from ..models import EUserStatus, ESexType, IUser, ISession
 from ..database import get_collection
 from ..services import session_service
 
@@ -12,7 +12,7 @@ from ..services import session_service
 # =====================================
 # @description 注册
 # =====================================
-def register(username: str, password: str, avatar: str, banner: str, email: str):
+def register(username: str, password: str, sex: ESexType, avatar: str, banner: str, email: str):
     EmailAlreadyExists = get_collection('users').find_one({'email': email})
     UserAlreadyExists = get_collection(
         'users').find_one({'username': username})
@@ -23,6 +23,7 @@ def register(username: str, password: str, avatar: str, banner: str, email: str)
         username=username,
         password=md5(password),
         email=email,
+        sex=sex.value,
         avatar=avatar,
         banner=banner,
         bio='',

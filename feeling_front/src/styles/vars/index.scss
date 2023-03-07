@@ -1,0 +1,107 @@
+/**
+ * 主题颜色
+ */
+
+//  主题颜色
+$primary-color: #3291ff;
+// 主题背景色
+$primary-bg-color: #ffffff;
+//  聊天背景色
+$chat-bg-color: #f4f4f4;
+// 底部tabBar颜色
+$tab-bar-color: #ffffff;
+// userId颜色
+$text-info-color: #a9a9a9;
+//私信卡片边框颜色
+$text-border-color: #ededed;
+
+/**
+ * 字体大小
+ */
+@mixin text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+@mixin text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+@mixin text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+@mixin text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+@mixin text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+@mixin text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+@mixin text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+@mixin text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+@mixin text-5xl {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+@mixin text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+@mixin text-7xl {
+  font-size: 4.5rem;
+  line-height: 1;
+}
+
+@mixin text-8xl {
+  font-size: 6rem;
+  line-height: 1;
+}
+
+// 关注按钮基本样式
+
+@mixin followBtnBase {
+  width: 85px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .text {
+    @include text-base();
+  }
+}
+
+// navBar title 基本样式
+@mixin navBarTitle {
+  @include text-xl();
+  font-weight: 600;
+}
+
+// 全局navbar高度
+$nav-bar-height: 50px;
+// 全局底部menu高度
+$menu-bar-height: 50px;
+// 全局tabBar高度
+$tab-bar-height: 40px;
+// 全局avatar宽高
+$avatar-size: 60px;

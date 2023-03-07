@@ -1,0 +1,143 @@
+.popup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.submit {
+  width: 56px;
+  height: 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  @include text-base;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+}
+
+.aside {
+  padding: 20px;
+  padding-right: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.section {
+  width: 100%;
+  padding: 20px;
+}
+
+.imageList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-gap: 4px;
+  border-radius: 10px;
+  overflow: auto;
+  margin: 10px 0;
+}
+
+.imageContainer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-height: 160px;
+  .image {
+    width: 100%;
+    height: 100%;
+  }
+  .delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    padding: 2px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    :global(#CloseOutline-CloseOutline) {
+      stroke: #fff;
+      stroke-width: 4px;
+    }
+    @include text-base;
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 30px;
+  input {
+    display: none;
+  }
+}
+
+.imageIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #fff;
+}
+
+.commentType {
+  display: flex;
+
+  .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    padding-right: 10px;
+    height: calc(100% + 40px);
+  }
+
+  .right {
+    width: 100%;
+    padding: 20px;
+    flex: 1;
+  }
+
+  .divider {
+    flex: 1;
+    margin: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.replyTo {
+  color: $primary-color;
+}
+
+.limit {
+  width: 100%;
+  text-align: right;
+  color: $text-info-color;
+}

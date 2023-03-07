@@ -1,0 +1,66 @@
+@mixin userInfoBoardFollowBtn {
+  @include followBtnBase();
+  position: absolute;
+  right: 20px;
+  top: calc(30px + 15px); // 30px 为头像高度一半
+}
+
+.userInfoWrapper {
+  position: relative;
+  .hasFollowedBtn {
+    @include userInfoBoardFollowBtn();
+    color: #000;
+    background-color: #fff;
+  }
+  .unFollowedBtn {
+    @include userInfoBoardFollowBtn();
+    color: #fff;
+    background-color: $primary-color;
+  }
+  .avatar {
+    --border-radius: 50%;
+    width: $avatar-size;
+    height: $avatar-size;
+    &.skeleton {
+      width: $avatar-size;
+      height: $avatar-size;
+      border-radius: 50%;
+      margin: 0;
+    }
+  }
+  .nickname {
+    @include text-2xl();
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .otherInfo {
+    @include text-lg();
+    line-height: 1.2;
+    color: $text-info-color;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    .createTime {
+      display: flex;
+      align-items: flex-end;
+    }
+  }
+  .bio {
+    @include text-lg();
+    margin-bottom: 8px;
+  }
+
+  .userFollowInfo {
+    @include text-base();
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    .num {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+  }
+}

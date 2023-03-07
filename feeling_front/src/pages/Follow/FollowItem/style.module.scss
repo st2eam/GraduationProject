@@ -1,0 +1,55 @@
+.followItemWrapper {
+  max-width: 100%;
+  height: fit-content;
+  display: flex;
+  gap: 15px;
+  word-break: break-all;
+  padding: 20px;
+}
+
+.left {
+  .avatar {
+    --border-radius: 50%;
+    --adm-avatar-size: 60px;
+  }
+}
+
+.right {
+  width: calc(100vw - 60px);
+  .top {
+    display: flex;
+    justify-content: space-between;
+    .nickname {
+      @include text-2xl();
+      font-weight: 600;
+    }
+    .userId {
+      @include text-lg();
+      color: $text-info-color;
+    }
+    .userFollowInfo {
+      @include text-xs();
+      color: $text-info-color;
+      margin-top: 4px;
+      .num {
+        margin-right: 4px;
+      }
+    }
+    .hasFollowedBtn {
+      @include followBtnBase();
+      margin-top: 4px;
+      color: #000;
+      background-color: #fff;
+    }
+    .unFollowedBtn {
+      @include followBtnBase();
+      margin-top: 4px;
+      color: #fff;
+      background-color: #000;
+    }
+  }
+  .bottom {
+    margin-top: 10px;
+    @include text-lg();
+  }
+}

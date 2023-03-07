@@ -1,0 +1,111 @@
+.postItem {
+  @include text-base;
+  display: flex;
+  width: 100%;
+  border: none;
+  border-top: 0.1px solid rgba(0, 0, 0, 0.1);
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 10px 0 20px;
+}
+
+.divider {
+  flex: 1;
+  margin: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-right: 25px;
+  width: 100%;
+}
+
+.postItemHeader {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: $text-info-color;
+  margin-bottom: 10px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.nickname {
+  color: #000;
+  font-weight: 700;
+  @include text-lg;
+}
+
+.userId {
+  color: $text-info-color;
+}
+
+.postItemText {
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+
+.imageContainer {
+  display: grid;
+  height: 160px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-gap: 4px;
+  border-radius: 10px;
+  overflow: auto;
+  margin-bottom: 10px;
+  .image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.postItemFooter {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin: 16px 0;
+  span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    @include text-sm;
+    color: $text-info-color;
+  }
+  .FooterIcon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.replyTo {
+  color: $primary-color;
+}
+
+.footer {
+  margin: 20px;
+}

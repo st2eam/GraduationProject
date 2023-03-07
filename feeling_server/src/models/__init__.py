@@ -46,6 +46,25 @@ class ServiceError(Exception):
         self.message = message
 
 
+class ELogType(Enum):
+    Post = auto()
+    Comment = auto()
+    Forward = auto()
+    DeletePost = auto()
+    DeleteComment = auto()
+    DeleteForward = auto()
+    Like = auto()
+    Unlike = auto()
+    Follow = auto()
+    Unfollow = auto()
+    Search = auto()
+
+
+class ESexType(Enum):
+    Male = auto()
+    Female = auto()
+
+
 class EUserStatus(Enum):
     Normal = auto()
     Disabled = auto()
