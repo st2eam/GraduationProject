@@ -145,7 +145,7 @@ function PersonalHome() {
                   EPagePath.MESSAGE_DETAIL.replace(
                     ':FriendId',
                     otherUser.userId
-                  ).replace(':FriendName', otherUser.nickname)
+                  ).replace(':FriendName', otherUser.username)
                 )
               }
             >
@@ -156,7 +156,7 @@ function PersonalHome() {
         onBack={() => navigate(-1)}
       >
         <span className={styles.title}>
-          {isOthers ? otherUser.nickname : user.nickname}
+          {isOthers ? otherUser.username : user.username}
         </span>
       </NavBar>
       {/* banner */}

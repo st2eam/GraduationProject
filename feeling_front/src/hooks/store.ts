@@ -12,9 +12,9 @@ export interface StoreContext {
 const context = createContext<StoreContext>({
   user: {
     _id: '',
-    openId: '',
     userId: '',
-    nickname: '',
+    username: '',
+    email: '',
     avatar: '',
     banner: '',
     bio: '',
@@ -44,13 +44,15 @@ const NewPostProvider = newPostContext.Provider
 
 export { newPostContext, NewPostProvider }
 
-export interface DirectMsgWithFriends{
-  inChatFriendId:string
-  setInChatFriendId:(inChatFriendId:string| ((inChatFriendId:string)=>string))=>void
+export interface DirectMsgWithFriends {
+  inChatFriendId: string
+  setInChatFriendId: (
+    inChatFriendId: string | ((inChatFriendId: string) => string)
+  ) => void
 }
 const directMsgWithFriends = createContext<DirectMsgWithFriends>({
-  inChatFriendId:'',
-  setInChatFriendId:()=>{}
+  inChatFriendId: '',
+  setInChatFriendId: () => {}
 })
 const DirectMsgProvider = directMsgWithFriends.Provider
-export {directMsgWithFriends , DirectMsgProvider}
+export { directMsgWithFriends, DirectMsgProvider }

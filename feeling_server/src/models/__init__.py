@@ -122,6 +122,7 @@ class IUser:
                  username: str,
                  password: str,
                  email: str,
+                 sex: ESexType,
                  avatar: str,
                  banner: str,
                  bio: str,  # 个人背景介绍
@@ -130,30 +131,13 @@ class IUser:
         self.userId = userId
         self.username = username
         self.password = password
+        self.sex = sex
         self.email = email
         self.avatar = avatar
         self.banner = banner
         self.bio = bio
         self.createdAt = createdAt
         self.status = status
-
-
-class UserData:
-    def __init__(self,
-                 userId: str,
-                 like: dict,
-                 read:  dict,
-                 follow: dict,
-                 comment:  dict,
-                 forward:  dict,
-                 search: dict):
-        self.userId = userId
-        self.read = read
-        self.like = like
-        self.follow = follow
-        self.search = search
-        self.comment = comment
-        self.forward = forward
 
 
 class ILikes:

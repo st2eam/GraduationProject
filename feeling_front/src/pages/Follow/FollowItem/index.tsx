@@ -43,7 +43,7 @@ function FollowItem({
         <div className={styles.top}>
           {/* 用户名称和id */}
           <div className={styles.userName}>
-            <div className={styles.nickname}>{user.nickname}</div>
+            <div className={styles.nickname}>{user.username}</div>
             <div className={styles.userId}>{user.userId}</div>
             {/* 是否存在两个数据 */}
             {user.subscribeCounts || user?.subscribeCounts === 0 ? (

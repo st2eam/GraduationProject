@@ -1,14 +1,13 @@
-import { EHttpStatusCode, EServiceRespCode } from '@/enums/status'
 import { IResp } from '@/interfaces/response'
 
-export function check (res: IResp) {
-  if (res.code === EServiceRespCode.OK && res.status === EHttpStatusCode.OK) {
+export function check(res: IResp) {
+  if (res.message === 'ok' && res.status === 200) {
     return true
   } else return false
 }
 
-export function checkWithData (res: IResp) {
-  if (res.code === EServiceRespCode.OK && res.status === EHttpStatusCode.OK && res.data) {
+export function checkWithData(res: IResp) {
+  if (res.message === 'ok' && res.status === 200 && res.data) {
     return true
   } else return false
 }

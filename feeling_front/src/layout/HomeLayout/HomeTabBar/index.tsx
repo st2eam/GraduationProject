@@ -10,26 +10,26 @@ import { useCurrentPage } from '@/hooks/useCurrentPage'
 import { useNavigate } from 'react-router-dom'
 import styles from './style.module.scss'
 import classnames from 'classnames'
-import useMessage from '@/hooks/useMessage'
-import useNotify from '@/hooks/useNotify'
-import { useRequest } from 'ahooks'
+// import useMessage from '@/hooks/useMessage'
+// import useNotify from '@/hooks/useNotify'
+// import { useRequest } from 'ahooks'
 
 function HomeTabBar() {
   const { currPagePath, currPageName } = useCurrentPage()
   const { newPost } = useContext(newPostContext)
-  const { hasUnread, isUnread } = useNotify()
-  const { getUnreadCount, unReadCount } = useMessage()
+  // const { hasUnread, isUnread } = useNotify()
+  // const { getUnreadCount, unReadCount } = useMessage()
 
-  useRequest(
-    async () => {
-      await getUnreadCount()
-      await isUnread()
-    },
-    {
-      pollingInterval: 1500,
-      pollingErrorRetryCount: 3
-    }
-  )
+  // useRequest(
+  //   async () => {
+  //     await getUnreadCount()
+  //     await isUnread()
+  //   },
+  //   {
+  //     pollingInterval: 1500,
+  //     pollingErrorRetryCount: 3
+  //   }
+  // )
 
   const tabs = [
     {
@@ -89,7 +89,7 @@ function HomeTabBar() {
           })}
         />
       ),
-      badge: hasUnread ? Badge.dot : undefined
+      // badge: hasUnread ? Badge.dot : undefined
     },
     {
       key: EPagePath.MESSAGE,
@@ -109,7 +109,7 @@ function HomeTabBar() {
           })}
         />
       ),
-      badge: unReadCount
+      // badge: unReadCount
     }
   ]
 

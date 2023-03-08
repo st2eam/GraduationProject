@@ -3,6 +3,11 @@ export enum EMsgType {
   Image
 }
 
+export enum ESexType {
+  Male = 1,
+  Female
+}
+
 export enum EMsgStatus {
   Read = 1,
   Unread,

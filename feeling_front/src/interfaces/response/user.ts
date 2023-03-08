@@ -1,8 +1,7 @@
 import { IFollow, IUser } from '../model'
 
 export interface ILoginResp {
-  isRegistered: boolean
-  openId?:string
+  session?: string
   nickname?: string
   avatar?: string
 }
@@ -10,6 +9,7 @@ export interface ILoginResp {
 export interface IRegisterResp {
   id: string
 }
+
 export interface IUserInfoResp extends IUser {
   _id: string
   hasFollowed: boolean

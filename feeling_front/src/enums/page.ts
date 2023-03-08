@@ -10,7 +10,7 @@ export enum EPagePath {
   Follow = '/follow/:userId', // 可能是自己的，也可能是别人的
   MESSAGE_DETAIL = '/message_detail/:FriendId/:FriendName',
   DETAIL = '/detail/:id',
-  NOT_FOUND = '/404',
+  NOT_FOUND = '/404'
 }
 
 export enum EPageName {
@@ -24,7 +24,7 @@ export enum EPageName {
   PERSONAL_DATA = '个人资料',
   FOLLOW = '关注',
   MESSAGE_DETAIL = '私信',
-  NOT_FOUND = '未找到',
+  NOT_FOUND = '未找到'
 }
 
 // follow页面内tabs

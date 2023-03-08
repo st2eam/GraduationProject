@@ -31,7 +31,6 @@ export const routes: RouteObject[] = [
       }
     ]
   },
-
   {
     element: <HomeLayout />,
     children: [

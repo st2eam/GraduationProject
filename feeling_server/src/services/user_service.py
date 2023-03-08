@@ -23,7 +23,7 @@ def register(username: str, password: str, sex: ESexType, avatar: str, banner: s
         username=username,
         password=md5(password),
         email=email,
-        sex=sex.value,
+        sex=sex,
         avatar=avatar,
         banner=banner,
         bio='',
@@ -38,9 +38,13 @@ def register(username: str, password: str, sex: ESexType, avatar: str, banner: s
 # @description 登录
 # =====================================
 def login(username: str, password: str, ip: str):
-    user = get_collection('users').find(
-        {"$or": [{'email': username}, {'username': username}]})[0]
-    check(user, UserErrorStat.ERR_USER_NOT_FOUND.value)
+    date_cursor = get_collection('users').find(
+        {"$or": [{'email': username}, {'username': username}]})
+    arr = []
+    for x in date_cursor:
+        arr.append(x)
+    check(len(arr) == 1, UserErrorStat.ERR_USER_NOT_FOUND.value)
+    user = arr[0]
     check(user['status'] == EUserStatus.Normal.value,
           UserErrorStat.ERR_USER_HAS_BEEN_BANNED.value)
     check(md5(password) == user['password'],
@@ -66,3 +70,11 @@ def login(username: str, password: str, ip: str):
 def logout(token: str):
     res = get_collection('session').delete_one({'sid': token})
     return res.acknowledged
+
+
+# =====================================
+# @description 检查登录状态
+# =====================================
+def validate_token(token: str):
+    res = get_collection('session').find_one({'sid': token})
+    check(res, UserErrorStat.ERR_USER_NOT_LOGIN.value)

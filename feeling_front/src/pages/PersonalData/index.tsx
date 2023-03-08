@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { useUserInfo } from '@/hooks/useUserInfo'
 import SingleImageUploader from './SingleImageUploader'
 import { ISetUserInfo } from '@/interfaces/request/user'
-import { checkUserId } from '@/utils/validate/checkUserId'
+import { userIdRule } from '@/utils/validate/checkUserId'
 import { getImageUploadedURL } from '@/api/oss'
 import { getStrLen } from '@/utils/tools/getStrLen'
 
@@ -23,7 +23,7 @@ function PersonalData() {
     try {
       const value = userForm.getFieldsValue()
       await userForm.validateFields()
-      const checkNicknameRes = checkUserId(value.nickname || '')
+      const checkNicknameRes = userIdRule(value.nickname || '')
       if (checkNicknameRes) {
         const result = await Dialog.confirm({
           content: '您确定要保存吗'
@@ -115,7 +115,7 @@ function PersonalData() {
         className={styles.userForm}
         form={userForm}
         initialValues={{
-          nickname: user.nickname,
+          nickname: user.username,
           bio: user.bio
         }}
         layout="horizontal"

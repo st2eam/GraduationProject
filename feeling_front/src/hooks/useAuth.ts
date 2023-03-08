@@ -1,6 +1,6 @@
-import { loginByWx, logout, register } from '@/api/auth'
+import { login, logout, register, security_code } from '@/api/auth'
 import { EPagePath } from '@/enums/page'
-import { IRegister, IWxLogin } from '@/interfaces/request/auth'
+import { IEmail, ILogin, IRegister } from '@/interfaces/request/auth'
 import { check, checkWithData } from '@/utils/checkHttpRes'
 import { Toast } from 'antd-mobile'
 import { useCallback, useState } from 'react'
@@ -10,22 +10,15 @@ export function useAuth() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const handleLogin = useCallback(
-    async (params: IWxLogin) => {
+    async (params: ILogin) => {
       try {
-        const res = await loginByWx(params)
+        const res = await login(params)
         if (checkWithData(res)) {
-          const { isRegistered, nickname = '', avatar = '', openId = '' } = res.data!
-          if (isRegistered) {
-            navigate(EPagePath.HOME, { replace: true })
+          const token = res.data
+          if (token) {
+            navigate('/home', { replace: true })
           } else {
-            navigate(EPagePath.REGISTER, {
-              replace: true,
-              state: {
-                nickname,
-                avatar,
-                openId
-              }
-            })
+            navigate('/login', { replace: true })
           }
         }
       } catch (error: any) {
@@ -61,10 +54,23 @@ export function useAuth() {
       setError(error)
     }
   }, [])
+
+  const getSecurityCode = useCallback(async (params: IEmail) => {
+    try {
+      const res = await security_code(params)
+      if (checkWithData(res)) {
+        return res.data!
+      }
+    } catch (error: any) {
+      setError(error)
+    }
+  }, [])
+
   return {
     error,
     handleLogin,
     handleLogout,
-    handleRegister
+    handleRegister,
+    getSecurityCode
   }
 }

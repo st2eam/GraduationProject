@@ -1,9 +1,13 @@
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from src.services.user_service import validate_token
 from src.blueprints import auth_blueprint, user_blueprint, notice_blueprint, post_blueprint, search_blueprint
 from src.models import ServiceError, JsonEncoder
+from src.utils.check import BodyErrorStat
 from src import database
 from schema import SchemaError
+
+
 app = Flask(__name__)
 
 database.init_db()
@@ -14,6 +18,14 @@ app.register_blueprint(user_blueprint.bp)
 app.register_blueprint(notice_blueprint.bp)
 app.register_blueprint(post_blueprint.bp)
 app.register_blueprint(search_blueprint.bp)
+
+
+@app.before_request
+def before_request():
+    authWhiteList = ['/api/auth/login',
+                     '/api/auth/register', '/api/auth/email']
+    if request.path not in authWhiteList:
+        validate_token(request.cookies.get('token'))
 
 
 @app.errorhandler(ServiceError)
@@ -34,6 +46,18 @@ def handle_schema_error(error):
         "status": 400,
     })
     response.status_code = 400
+    return response
+
+
+@app.errorhandler(KeyError)
+def handle_key_error(error):
+    error = BodyErrorStat.ERR_BAD_BODY_PARAMS.value
+    response = jsonify({
+        "message": error.message,
+        "status": error.status,
+        "code": error.code
+    })
+    response.status_code = error.status
     return response
 
 

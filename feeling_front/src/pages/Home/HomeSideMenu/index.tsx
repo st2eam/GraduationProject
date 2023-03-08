@@ -59,7 +59,7 @@ function HomeSideMenu({ visible, setVisible }: IHomeSideMenu) {
             navigate(EPagePath.PERSONAL_HOME.replace(':userId', user.userId))
           }
         />
-        <div className={styles.nickname}>{user.nickname}</div>
+        <div className={styles.nickname}>{user.username}</div>
         <div className={styles.userId}>{user.userId}</div>
       </div>
       {/* 关注信息 */}

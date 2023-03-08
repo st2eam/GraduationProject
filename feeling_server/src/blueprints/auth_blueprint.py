@@ -76,7 +76,7 @@ def logout():
 # =====================================
 # @description 发送注册邮件
 # =====================================
-@bp.route('/email', methods=["GET"])
+@bp.route('/email', methods=["POST"])
 def email():
     num = str(random.randint(1, 999999)).zfill(6)
     email_regex = Regex(

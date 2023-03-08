@@ -1,28 +1,23 @@
-import { EAuthApi } from '@/enums/api'
-import { IRegister, IWxLogin } from '@/interfaces/request/auth'
+import { IRegister, ILogin, IEmail } from '@/interfaces/request/auth'
 import { IResp } from '@/interfaces/response'
 import { ILoginResp, IRegisterResp } from '@/interfaces/response/user'
-import { IWxAuthResp } from '@/interfaces/response/wx'
 import * as request from '@/utils/http/axios'
 
-export async function wxAuth() {
-  return request.httpGet<IResp<IWxAuthResp>>(EAuthApi.Prefix + EAuthApi.WxAuth)
+// 登录
+export async function login(body: ILogin) {
+  return request.httpPost<IResp<ILoginResp>>('/auth/login', body)
 }
 
+// 注册
 export async function register(body: IRegister) {
-  return request.httpPost<IResp<IRegisterResp>>(
-    EAuthApi.Prefix + EAuthApi.Register,
-    body
-  )
+  return request.httpPost<IResp<IRegisterResp>>('/auth/register', body)
 }
 
-export async function loginByWx(body: IWxLogin) {
-  return request.httpPost<IResp<ILoginResp>>(
-    EAuthApi.Prefix + EAuthApi.WxLogin,
-    body
-  )
-}
-
+// 退出登录
 export async function logout() {
-  return request.httpPost<IResp<ILoginResp>>(EAuthApi.Prefix + EAuthApi.Logout)
+  return request.httpGet<IResp<ILoginResp>>('/auth/logout')
+}
+
+export async function security_code(body: IEmail) {
+  return request.httpPost<IResp<string>>('/auth/email', body)
 }

@@ -148,7 +148,7 @@ function Follow() {
         onBack={() => navigate(-1)}
       >
         <span className={styles.nickname}>
-          {isOthers ? otherUser.nickname : user.nickname}
+          {isOthers ? otherUser.username : user.username}
         </span>
       </NavBar>
       <CustomSwiperTab

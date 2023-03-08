@@ -14,9 +14,9 @@ export interface ISession {
 }
 
 export interface IUser {
-  openId: string
   userId: string // unique account @xxx
-  nickname: string
+  username: string
+  email: string
   avatar: string
   banner: string
   bio: string // 个人背景介绍

@@ -61,7 +61,7 @@ function UserInfoBoard({
         }}
       />
       {/* 昵称 */}
-      <div className={styles.nickname}>{user.nickname || '匿名用户'}</div>
+      <div className={styles.nickname}>{user.username || '匿名用户'}</div>
       {/* 其他信息 */}
       <div className={styles.otherInfo}>
         <div className={styles.userId}>{user.userId || '@匿名用户'}</div>

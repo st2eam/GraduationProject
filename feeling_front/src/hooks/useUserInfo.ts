@@ -1,9 +1,4 @@
-import {
-  getUserInfo,
-  setUserInfo,
-  userFollow,
-  userUnfollow
-} from '@/api/user'
+import { getUserInfo, setUserInfo, userFollow, userUnfollow } from '@/api/user'
 import {
   IFollowUser,
   IGetUserInfo,
@@ -21,9 +16,9 @@ export function useUserInfo() {
   const { user, setUser } = useContext(context)
   const [otherUser, setOtherUser] = useState<IUserInfoResp>({
     _id: '',
-    openId: '',
     userId: '',
-    nickname: '',
+    username: '',
+    email: '',
     avatar: '',
     banner: '',
     bio: '',

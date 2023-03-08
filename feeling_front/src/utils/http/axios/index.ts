@@ -5,11 +5,7 @@ import axios, {
 } from 'axios'
 import { Toast } from 'antd-mobile'
 import { EPagePath } from '@/enums/page'
-import {
-  EPostErrorCode,
-  EServiceRespCode,
-  EUserErrorCode
-} from '@/enums/status'
+import { EPostErrorCode, EUserErrorCode } from '@/enums/status'
 import { throttle } from 'lodash-es'
 
 const showNetWorkErrorToast = throttle(
@@ -46,9 +42,9 @@ defHttp.interceptors.request.use(
 
 // 设置回应拦截
 defHttp.interceptors.response.use(
-  (response: { data: { code: number; msg: any } }) => {
-    if (response.data.code !== EServiceRespCode.OK) {
-      // 未拿到且code为20004（未登录）则定向到login
+  (response: { data: { code: number; message: string } }) => {
+    console.log(response)
+    if (response.data.code) {
       if (
         response.data.code === EUserErrorCode.ERR_USER_NOT_LOGIN &&
         !window.location.href.includes(EPagePath.LOGIN)
@@ -58,9 +54,9 @@ defHttp.interceptors.response.use(
       if (response.data.code === EPostErrorCode.ERR_POST_NOT_FOUND) {
         window.location.replace(EPagePath.NOT_FOUND)
       }
-      if (response.data.msg) {
+      if (response.data.message) {
         Toast.show({
-          content: response.data.msg,
+          content: response.data.message,
           icon: 'fail',
           duration: 800
         })
