@@ -18,7 +18,7 @@ function PersonalData() {
   const [newAvatar, setNewAvatar] = useState('')
   const [userForm] = Form.useForm<Pick<ISetUserInfo, 'bio' | 'nickname'>>()
   const bio = Form.useWatch('bio', userForm)
-  const nickname = Form.useWatch('nickname', userForm)
+  const userId = Form.useWatch('userId', userForm)
   const handleSave = async () => {
     try {
       const value = userForm.getFieldsValue()
@@ -115,18 +115,18 @@ function PersonalData() {
         className={styles.userForm}
         form={userForm}
         initialValues={{
-          nickname: user.username,
+          userId: user.userId,
           bio: user.bio
         }}
         layout="horizontal"
         requiredMarkStyle="none"
       >
         <Form.Item
-          name="nickname"
+          name="userId"
           label="姓名"
           rules={[{ required: true }]}
           description={
-            <div className={styles.limit}>{getStrLen(nickname || '')}/16</div>
+            <div className={styles.limit}>{getStrLen(userId || '')}/16</div>
           }
         >
           <Input className={styles.nickname} placeholder="请输入姓名" />

@@ -15,13 +15,13 @@
     margin-bottom: 10px;
   }
 
-  .nickname {
+  .username {
     @include text-2xl();
     font-weight: 600;
     margin-bottom: 4px;
   }
 
-  .userId {
+  .email {
     @include text-lg();
     color: $text-info-color;
   }

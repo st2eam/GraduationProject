@@ -34,7 +34,7 @@ def create_post(token: str, content: str, imgs: list[str], label: list[str]):
         likes=0,
         comments=0,
         forwards=0,
-        createdAt=time.time(),
+        createdAt=time.time()*1000
     ))
     res = get_collection('posts').insert_one(post)
     log_service.addItem(userId=userId, postId=res.inserted_id,
@@ -60,7 +60,7 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
         likes=0,
         comments=0,
         forwards=0,
-        createdAt=time.time(),
+        createdAt=time.time()*1000
     ))
     res = get_collection('posts').insert_one(comment)
     if userId != post['userId']:
@@ -94,7 +94,7 @@ def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
         likes=0,
         comments=0,
         forwards=0,
-        createdAt=time.time(),
+        createdAt=time.time()*1000
     ))
     res = get_collection('posts').insert_one(forward)
     if userId != post['userId']:
@@ -120,7 +120,7 @@ def like(id: str, token: str):
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
     like = bsonify(
-        ILikes(userId=userId, postId=ObjectId(id), createdAt=time.time()))
+        ILikes(userId=userId, postId=ObjectId(id), createdAt=time.time()*1000))
     res = get_collection('likes').insert_one(like)
     log_service.addItem(userId=userId, postId=ObjectId(id),
                         type=ELogType.Like.value)

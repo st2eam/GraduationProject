@@ -15,7 +15,6 @@ export interface ISession {
 
 export interface IUser {
   userId: string // unique account @xxx
-  username: string
   email: string
   avatar: string
   banner: string

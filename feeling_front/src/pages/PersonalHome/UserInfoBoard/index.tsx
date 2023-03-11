@@ -12,8 +12,8 @@ import { useUserInfo } from '@/hooks/useUserInfo'
 interface IUserInfoBoard {
   user: IUserInfoResp
   isOthers: boolean
-  hasFollowed?: boolean | null // null 是为了解决样式改变的闪现问题
-  setHasFollowed?: (hasFollowed: boolean) => void
+  haveFollowed?: boolean | null // null 是为了解决样式改变的闪现问题
+  sethaveFollowed?: (haveFollowed: boolean) => void
   className?: string
 }
 
@@ -21,17 +21,17 @@ function UserInfoBoard({
   user,
   className,
   isOthers,
-  hasFollowed,
-  setHasFollowed = () => {}
+  haveFollowed,
+  sethaveFollowed = () => {}
 }: IUserInfoBoard) {
   const navigate = useNavigate()
   const { handleFollowUser, handleUnfollowUser } = useUserInfo()
   const handleFollowBtnClick = async () => {
-    const res = hasFollowed
+    const res = haveFollowed
       ? await handleUnfollowUser({ id: user.userId })
       : await handleFollowUser({ id: user.userId })
     if (res) {
-      setHasFollowed(!hasFollowed)
+      sethaveFollowed(!haveFollowed)
     }
   }
   return (
@@ -41,14 +41,14 @@ function UserInfoBoard({
         <Button
           shape="rounded"
           className={classnames({
-            [styles.hasFollowedBtn]: hasFollowed,
-            [styles.unFollowedBtn]: !hasFollowed
+            [styles.haveFollowedBtn]: haveFollowed,
+            [styles.unFollowedBtn]: !haveFollowed
           })}
           loading="auto"
           onClick={handleFollowBtnClick}
         >
           <span className={styles.text}>
-            {hasFollowed ? '正在关注' : '关注'}
+            {haveFollowed ? '正在关注' : '关注'}
           </span>
         </Button>
       ) : null}
@@ -61,10 +61,10 @@ function UserInfoBoard({
         }}
       />
       {/* 昵称 */}
-      <div className={styles.nickname}>{user.username || '匿名用户'}</div>
+      <div className={styles.userId}>{user.userId || '匿名用户'}</div>
       {/* 其他信息 */}
       <div className={styles.otherInfo}>
-        <div className={styles.userId}>{user.userId || '@匿名用户'}</div>
+        <div className={styles.email}>{user.email || '@Unknown'}</div>
         <div className={styles.createTime}>
           <CalendarIcon />
           {getFormatDateByMillionSeconds(user.createdAt)}

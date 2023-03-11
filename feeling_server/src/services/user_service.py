@@ -6,28 +6,27 @@ from ..utils.check import *
 from ..utils.bsonify import *
 from ..models import EUserStatus, ESexType, IUser, ISession
 from ..database import get_collection
-from ..services import session_service
+from ..services import session_service, follow_service
 
 
 # =====================================
 # @description 注册
 # =====================================
-def register(username: str, password: str, sex: ESexType, avatar: str, banner: str, email: str):
+def register(userId: str, password: str, sex: ESexType, avatar: str, banner: str, email: str):
     EmailAlreadyExists = get_collection('users').find_one({'email': email})
     UserAlreadyExists = get_collection(
-        'users').find_one({'username': username})
+        'users').find_one({'userId': userId})
     check(not EmailAlreadyExists, UserErrorStat.ERR_EMAIL_ALREADY_EXISTS.value)
     check(not UserAlreadyExists, UserErrorStat.ERR_USER_ALREADY_EXISTS.value)
     user = bsonify(IUser(
-        userId=str(uuid.uuid1()),
-        username=username,
+        userId=userId,
         password=md5(password),
         email=email,
         sex=sex,
         avatar=avatar,
         banner=banner,
         bio='',
-        createdAt=time.time(),
+        createdAt=time.time()*1000,
         status=EUserStatus.Normal.value
     ))
     res = get_collection('users').insert_one(user)
@@ -39,7 +38,7 @@ def register(username: str, password: str, sex: ESexType, avatar: str, banner: s
 # =====================================
 def login(username: str, password: str, ip: str):
     date_cursor = get_collection('users').find(
-        {"$or": [{'email': username}, {'username': username}]})
+        {"$or": [{'email': username}, {'userId': username}]})
     arr = []
     for x in date_cursor:
         arr.append(x)
@@ -56,7 +55,7 @@ def login(username: str, password: str, ip: str):
             userId=user['userId'],
             sid=UUID,
             ip=ip,
-            createdAt=time.time(),
+            createdAt=time.time()*1000
         ))
         get_collection('session').insert_one(session)
         return UUID
@@ -78,3 +77,20 @@ def logout(token: str):
 def validate_token(token: str):
     res = get_collection('session').find_one({'sid': token})
     check(res, UserErrorStat.ERR_USER_NOT_LOGIN.value)
+
+
+# =====================================
+# @description 获取用户信息
+# =====================================
+def get_user_info(token: str, otherUserId: str):
+    currLoginUserId = session_service.getSessionBySid(token)['userId']
+    userId = otherUserId if bool(otherUserId) else currLoginUserId
+    user = get_collection('users').find_one({'userId': userId})
+    check(bool(user), UserErrorStat.ERR_USER_NOT_FOUND.value)
+    check(user['status'] == EUserStatus.Normal.value,
+          UserErrorStat.ERR_USER_HAS_BEEN_BANNED.value)
+    follows = follow_service.how_many_people_I_follow(userId)
+    subscribes = follow_service.how_many_people_follow_me(userId)
+    haveFollowed = follow_service.haveFollowed(
+        currLoginUserId, otherUserId) if bool(otherUserId) else False
+    return {**user, 'haveFollowed': haveFollowed, 'followCounts': follows, 'subscribeCounts': subscribes}

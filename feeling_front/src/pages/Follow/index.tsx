@@ -88,18 +88,18 @@ function Follow() {
     e: MouseEvent
   ) => {
     e.stopPropagation() // 阻止冒泡
-    const _hasFollowed = target[index].hasFollowed
-    const res = _hasFollowed
+    const _haveFollowed = target[index].haveFollowed
+    const res = _haveFollowed
       ? await handleUnfollowUser({ id: target[index].user.userId })
       : await handleFollowUser({ id: target[index].user.userId })
     if (res) {
-      target[index].hasFollowed = !_hasFollowed
+      target[index].haveFollowed = !_haveFollowed
       setTarget([...target])
       if (!isOthers) {
         // 判断是否是自己的follow页面，若是则执行同步操作，若不是则不执行
         if (activeIndex === 0) {
           // 如果在关注我的列表
-          if (_hasFollowed) {
+          if (_haveFollowed) {
             // 如果当前状态是关注中，则再次点击是取关, 去除我的关注列表的关注
             const _follows = follows.filter(
               (item) => item.followId !== subscribes[index].userId
@@ -122,15 +122,15 @@ function Follow() {
               ]
               setFollows(_follows)
             } else {
-              follows[isExist].hasFollowed = target[index].hasFollowed
+              follows[isExist].haveFollowed = target[index].haveFollowed
               setFollows([...follows])
             }
           }
         } else if (activeIndex === 1) {
-          // 如果在我的关注列表，只需要将hasFollowed改变同步到关注我的列表即可
+          // 如果在我的关注列表，只需要将haveFollowed改变同步到关注我的列表即可
           for (const subscribe of subscribes) {
             if (subscribe.userId === target[index].followId) {
-              subscribe.hasFollowed = target[index].hasFollowed
+              subscribe.haveFollowed = target[index].haveFollowed
               break
             }
           }
@@ -148,7 +148,7 @@ function Follow() {
         onBack={() => navigate(-1)}
       >
         <span className={styles.nickname}>
-          {isOthers ? otherUser.username : user.username}
+          {isOthers ? otherUser.userId : user.userId}
         </span>
       </NavBar>
       <CustomSwiperTab
@@ -172,7 +172,7 @@ function Follow() {
                     user={subscribe.user}
                     isSelf={subscribe.user.userId === user.userId}
                     unfollowText={isOthers ? '关注' : '回关'}
-                    hasFollowed={subscribe.hasFollowed}
+                    haveFollowed={subscribe.haveFollowed}
                     onItemClick={() =>
                       navigate(
                         EPagePath.PERSONAL_HOME.replace(
@@ -213,7 +213,7 @@ function Follow() {
                     key={follow._id}
                     user={follow.user}
                     isSelf={follow.user.userId === user.userId}
-                    hasFollowed={follow.hasFollowed}
+                    haveFollowed={follow.haveFollowed}
                     onItemClick={() =>
                       navigate(
                         EPagePath.PERSONAL_HOME.replace(

@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks/useAuth'
 import { ILogin } from '@/interfaces/request/auth'
-import { Avatar, Button, Form, Input } from 'antd-mobile'
+import { Button, Form, Input } from 'antd-mobile'
 import styles from './style.module.scss'
 import { checkUserId } from '@/utils/validate/checkUserId'
 function Login() {

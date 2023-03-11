@@ -12,7 +12,7 @@ export interface IRegisterResp {
 
 export interface IUserInfoResp extends IUser {
   _id: string
-  hasFollowed: boolean
+  haveFollowed: boolean
   followCounts: number
   subscribeCounts: number
 }
@@ -25,7 +25,7 @@ export interface IUserSearchResp {
 export interface IUserFollowItemResp extends IFollow {
   _id: string
   user: IUserInfoResp
-  hasFollowed: boolean
+  haveFollowed: boolean
 }
 export interface IUserFollowResp {
   items: IUserFollowItemResp[]

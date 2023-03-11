@@ -8,13 +8,13 @@ import { getFriendlyNum } from '@/utils/tools/getFriendlyNum'
 interface IFollowItem {
   user: Omit<
     IUserInfoResp,
-    'hasFollowed' | 'followCounts' | 'subscribeCounts'
+    'haveFollowed' | 'followCounts' | 'subscribeCounts'
   > & {
-    hasFollowed?: boolean
+    haveFollowed?: boolean
     followCounts?: number
     subscribeCounts?: number
   }
-  hasFollowed: boolean
+  haveFollowed: boolean
   isSelf: boolean
   followText?: ReactNode
   unfollowText?: ReactNode
@@ -24,7 +24,7 @@ interface IFollowItem {
 
 function FollowItem({
   user,
-  hasFollowed,
+  haveFollowed,
   isSelf,
   followText = '正在关注',
   unfollowText = '关注',
@@ -43,8 +43,8 @@ function FollowItem({
         <div className={styles.top}>
           {/* 用户名称和id */}
           <div className={styles.userName}>
-            <div className={styles.nickname}>{user.username}</div>
-            <div className={styles.userId}>{user.userId}</div>
+            <div className={styles.nickname}>{user.userId}</div>
+            <div className={styles.userId}>{user.email}</div>
             {/* 是否存在两个数据 */}
             {user.subscribeCounts || user?.subscribeCounts === 0 ? (
               <div className={styles.userFollowInfo}>
@@ -62,14 +62,14 @@ function FollowItem({
             <Button
               shape="rounded"
               className={classnames({
-                [styles.hasFollowedBtn]: hasFollowed,
-                [styles.unFollowedBtn]: !hasFollowed
+                [styles.haveFollowedBtn]: haveFollowed,
+                [styles.unFollowedBtn]: !haveFollowed
               })}
               loading="auto"
               onClick={(e) => onFollowBtnClick(e)}
             >
               <span className={styles.text}>
-                {hasFollowed ? followText : unfollowText}
+                {haveFollowed ? followText : unfollowText}
               </span>
             </Button>
           )}

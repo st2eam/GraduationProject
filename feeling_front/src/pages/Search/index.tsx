@@ -136,11 +136,11 @@ function Search() {
   // 点击关注按钮
   const onFollow = async (e: React.MouseEvent, index: number) => {
     e.stopPropagation()
-    const res = userList[index].hasFollowed
+    const res = userList[index].haveFollowed
       ? await handleUnfollowUser({ id: userList[index].userId })
       : await handleFollowUser({ id: userList[index].userId })
     if (res) {
-      userList[index].hasFollowed = !userList[index].hasFollowed
+      userList[index].haveFollowed = !userList[index].haveFollowed
       setUserList(userList)
     }
   }
@@ -207,7 +207,7 @@ function Search() {
                       isSelf={user._id === self._id}
                       onItemClick={() => onUserItemClick(user.userId)}
                       onFollowBtnClick={(e) => onFollow(e, index)}
-                      hasFollowed={user.hasFollowed}
+                      haveFollowed={user.haveFollowed}
                     />
                   ))}
                 </CustomList>

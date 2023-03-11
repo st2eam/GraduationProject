@@ -15,14 +15,13 @@ function App() {
   const [user, setUser] = useState<IUserInfoResp>({
     _id: '',
     userId: '',
-    username: '',
     email: '',
     avatar: '',
     banner: '',
     bio: '',
     createdAt: -1,
     status: EUserStatus.Normal,
-    hasFollowed: false,
+    haveFollowed: false,
     followCounts: 0,
     subscribeCounts: 0
   })

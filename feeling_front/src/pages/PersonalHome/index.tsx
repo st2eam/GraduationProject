@@ -28,7 +28,7 @@ function PersonalHome() {
   ]
   const navigate = useNavigate()
   const { newPost } = useContext(newPostContext)
-  const { user, otherUser, hasFollowed, setHasFollowed, handleGetUserInfo } =
+  const { user, otherUser, haveFollowed, sethaveFollowed, handleGetUserInfo } =
     useUserInfo()
   const { userId } = useParams()
   const isOthers = userId !== user.userId
@@ -145,7 +145,7 @@ function PersonalHome() {
                   EPagePath.MESSAGE_DETAIL.replace(
                     ':FriendId',
                     otherUser.userId
-                  ).replace(':FriendName', otherUser.username)
+                  ).replace(':FriendName', otherUser.userId)
                 )
               }
             >
@@ -156,7 +156,7 @@ function PersonalHome() {
         onBack={() => navigate(-1)}
       >
         <span className={styles.title}>
-          {isOthers ? otherUser.username : user.username}
+          {isOthers ? otherUser.userId : user.userId}
         </span>
       </NavBar>
       {/* banner */}
@@ -182,8 +182,8 @@ function PersonalHome() {
             })}
             user={isOthers ? otherUser : user}
             isOthers={isOthers}
-            hasFollowed={hasFollowed}
-            setHasFollowed={setHasFollowed}
+            haveFollowed={haveFollowed}
+            sethaveFollowed={sethaveFollowed}
           />
         </div>
       )}

@@ -17,18 +17,17 @@ export function useUserInfo() {
   const [otherUser, setOtherUser] = useState<IUserInfoResp>({
     _id: '',
     userId: '',
-    username: '',
     email: '',
     avatar: '',
     banner: '',
     bio: '',
     createdAt: -1,
     status: EUserStatus.Normal,
-    hasFollowed: false,
+    haveFollowed: false,
     followCounts: 0,
     subscribeCounts: 0
   })
-  const [hasFollowed, setHasFollowed] = useState(false)
+  const [haveFollowed, sethaveFollowed] = useState(false)
 
   const handleGetUserInfo = useCallback(
     async (params: IGetUserInfo, isOthers = false) => {
@@ -40,7 +39,7 @@ export function useUserInfo() {
           } else {
             setUser(res.data!)
           }
-          setHasFollowed(res.data!.hasFollowed)
+          sethaveFollowed(res.data!.haveFollowed)
         }
       } catch (error) {}
     },
@@ -102,8 +101,8 @@ export function useUserInfo() {
     setUser,
     otherUser,
     setOtherUser,
-    hasFollowed,
-    setHasFollowed,
+    haveFollowed,
+    sethaveFollowed,
     handleGetUserInfo,
     handleSetUserInfo,
     handleFollowUser,

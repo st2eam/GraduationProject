@@ -119,7 +119,6 @@ class ISession:
 class IUser:
     def __init__(self,
                  userId: str,
-                 username: str,
                  password: str,
                  email: str,
                  sex: ESexType,
@@ -129,7 +128,6 @@ class IUser:
                  createdAt: float,
                  status: EUserStatus):
         self.userId = userId
-        self.username = username
         self.password = password
         self.sex = sex
         self.email = email

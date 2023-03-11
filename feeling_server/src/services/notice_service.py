@@ -13,7 +13,7 @@ def create_notice(type: ENoticeType, senderId: str, receiverId: str, relationId:
         senderId=senderId,
         receiverId=receiverId,
         relationId=ObjectId(relationId),
-        createdAt=time.time(),
+        createdAt=time.time()*1000,
         status=EMsgStatus.Unread.value
     ))
     res = get_collection('notices').insert_one(notice)

@@ -40,14 +40,14 @@ def login():
 @bp.route('/register', methods=["POST"])
 def register():
     data = Schema({
-        'username': str,
+        'userId': str,
         'password': str,
         'email': str,
         'sex': Or(ESexType.Female.value, ESexType.Male.value),
         "avatar": str,
         "banner": str
     }).validate(request.json)
-    res = user_service.register(username=data['username'],
+    res = user_service.register(userId=data['userId'],
                                 password=data['password'],
                                 email=data['email'],
                                 sex=data['sex'],

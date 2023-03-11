@@ -3,14 +3,14 @@ from schema import Schema, Optional, Use
 from ..models import ApiResp, IPagination
 from ..services import notice_service
 
-bp = Blueprint('Notice', __name__, url_prefix='/api/Notice')
+bp = Blueprint('notice', __name__, url_prefix='/api/notice')
 
 
 # =====================================
 # @description 获取通知列表
 # =====================================
 @bp.route('/get', methods=["GET"])
-def get_Notice():
+def get_notice():
     props = Schema({
         Optional('prev'): str,
         Optional('next'): str,

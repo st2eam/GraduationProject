@@ -18,32 +18,26 @@ import { getStringifyObj } from '@/utils/qs'
 
 export async function getUserInfo({ userId = '' }: IGetUserInfo) {
   const res = await request.httpGet<IResp<IUserInfoResp>>(
-    EUserApi.Prefix + EUserApi.GetInfo + '/' + userId
+    '/user/info?id=' + userId
   )
   return res
 }
 
 export async function setUserInfo(body: ISetUserInfo) {
   const res = await request.httpPost<IResp<IUserInfoResp>>(
-    EUserApi.Prefix + EUserApi.SetInfo,
+    '/user/set_info',
     body
   )
   return res
 }
 
 export async function userFollow(body: IFollowUser) {
-  const res = await request.httpPost<IResp>(
-    EUserApi.Prefix + EUserApi.Follow,
-    body
-  )
+  const res = await request.httpPost<IResp>('/user/follow', body)
   return res
 }
 
 export async function userUnfollow(body: IUnfollowUser) {
-  const res = await request.httpPost<IResp>(
-    EUserApi.Prefix + EUserApi.Unfollow,
-    body
-  )
+  const res = await request.httpPost<IResp>('/user/unfollow', body)
   return res
 }
 

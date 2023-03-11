@@ -52,3 +52,5 @@ class MessageErrorStat(Enum):
 class FollowErrorStat(Enum):
     ERR_ALREADY_FOLLOW = ServiceError(
         status=400, code=60001, message='已在关注列表')
+    ERR_FOLLOW_NOT_FOUND = ServiceError(
+        status=404, code=60002, message='关系不存在')
