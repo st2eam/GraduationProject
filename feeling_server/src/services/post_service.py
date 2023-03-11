@@ -16,6 +16,58 @@ ner_class_list = ['address', 'book', 'company', 'game', 'goverment',
 classify_class_list = ['财经', '房产', '股票', '教育', '科技',
                        '社会', '时政', '体育', '游戏', '娱乐']
 
+filterDeleted = [{'$match': {'type': {'$ne': EPostType.Delete.value}}}]
+
+relatInfo = [
+    {'$lookup': {
+        'from': 'post',
+        'localField': 'relationId',
+        'foreignField': '_id',
+        'as': 'relate.post'
+    }
+    },
+    {'$lookup': {
+        'from': 'users',
+        'localField': 'relate.post.userId',
+        'foreignField': 'userId',
+        'as': 'relate.user'
+    }
+    },
+    {'$project': {
+        'relate.user._id': 0,
+        'relate.user.createdAt': 0,
+        'relate.user.openId': 0,
+        'relate.user.banner': 0,
+        'relate.user.bio': 0,
+        'relate.user.status': 0
+    }
+    }
+]
+
+userInfo = [
+    {
+        '$lookup': {
+            'from': 'users',
+            'localField': 'userId',
+            'foreignField': 'userId',
+            'as': 'user'
+        }
+    },
+    {
+        '$unwind': '$user'
+    },
+    {
+        '$project': {
+            'user._id': 0,
+            'user.createdAt': 0,
+            'user.openId': 0,
+            'user.banner': 0,
+            'user.bio': 0,
+            'user.status': 0
+        }
+    }
+]
+
 
 def create_post(token: str, content: str, imgs: list[str], label: list[str]):
     result_Classify = TextClassifier_MAIN.predict([content])[0]
@@ -153,7 +205,6 @@ def delete(id: str, token: str):
     # 将帖子类型设置为删除
     get_collection('posts').update_one({'_id': ObjectId(id)}, {
         '$set': {'type': EPostType.Delete.value}})
-
     # 更新用户数据,仅添加属于自己的内容
     if post['userId'] == userId:
         type = ELogType.DeletePost.value if post['type'] == EPostType.Post.value else ELogType.DeleteForward.value if post[

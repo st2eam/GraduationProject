@@ -27,4 +27,4 @@ def get_notice_list(token: str, props: IPagination):
     hasPrev = False
     if not props.next:
         pass
-    return
+    return props

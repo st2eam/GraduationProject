@@ -94,3 +94,17 @@ def get_user_info(token: str, otherUserId: str):
     haveFollowed = follow_service.haveFollowed(
         currLoginUserId, otherUserId) if bool(otherUserId) else False
     return {**user, 'haveFollowed': haveFollowed, 'followCounts': follows, 'subscribeCounts': subscribes}
+
+
+# =====================================
+# @description 更新用户信息
+# =====================================
+def set_user_info(token: str, newUserId: str, avatar: str, banner: str, bio: str):
+    userId = session_service.getSessionBySid(token)['userId']
+    user = get_collection('users').find_one({'userId': userId})
+    userId = newUserId if newUserId else user['userId']
+    avatar = avatar if avatar else user['avatar']
+    banner = banner if banner else user['banner']
+    res = get_collection('users').update_one({'userId': userId}, {
+        '$set': {'userId': userId, 'avatar': avatar, 'bio': bio, 'banner': banner}})
+    return res.acknowledged

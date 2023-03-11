@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from src.services.user_service import validate_token
-from src.blueprints import auth_blueprint, user_blueprint, notice_blueprint, post_blueprint, search_blueprint
+from src.blueprints import auth_blueprint, user_blueprint, notice_blueprint, post_blueprint, search_blueprint, upload_blueprint
 from src.models import ServiceError, JsonEncoder
 from src.utils.check import BodyErrorStat
 from src import database
@@ -17,6 +17,7 @@ app.register_blueprint(auth_blueprint.bp)
 app.register_blueprint(user_blueprint.bp)
 app.register_blueprint(notice_blueprint.bp)
 app.register_blueprint(post_blueprint.bp)
+app.register_blueprint(upload_blueprint.bp)
 app.register_blueprint(search_blueprint.bp)
 
 

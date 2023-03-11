@@ -96,12 +96,22 @@ class ENoticeType(Enum):
 
 class IPagination:
     def __init__(self,
-                 prev: str,
-                 next: str,
-                 limit: int):
+                 limit: int,
+                 prev=None,
+                 next=None):
         self.prev = prev
         self.next = next
         self.limit = limit
+
+
+class ISearch(IPagination):
+    def __init__(self,
+                 keyword: str,
+                 limit: int,
+                 prev=None,
+                 next=None):
+        super().__init__(prev=prev, next=next, limit=limit)
+        self.keyword = keyword
 
 
 class ISession:
@@ -149,9 +159,13 @@ class ILikes:
 
 
 class IFollow:
-    userId: str
-    followId: str
-    createdAt: float
+    def __init__(self,
+                 userId: str,
+                 followId: str,
+                 createdAt: float):
+        self.userId = userId
+        self.followId = followId
+        self.createdAt = createdAt
 
 
 class IConversation:

@@ -3,12 +3,14 @@ from ..utils.check import *
 from ..utils.bsonify import *
 from ..models import IFollow
 from ..database import get_collection
+from ..services import session_service
 
 
 # =====================================
 # @description 关注
 # =====================================
-def follow(userId: str, followId: str):
+def follow(token: str, followId: str):
+    userId = session_service.getSessionBySid(token)['userId']
     FollowAlreadyExists = get_collection(
         'follows').find_one({'userId': userId, 'followId': followId})
     check(not FollowAlreadyExists, FollowErrorStat.ERR_ALREADY_FOLLOW.value)
@@ -17,14 +19,15 @@ def follow(userId: str, followId: str):
         followId=followId,
         createdAt=time.time()*1000
     ))
-    res = get_collection('users').insert_one(user)
+    res = get_collection('follows').insert_one(user)
     return str(res.inserted_id)
 
 
 # =====================================
 # @description 取关
 # =====================================
-def unfollow(userId: str, followId: str):
+def unfollow(token: str, followId: str):
+    userId = session_service.getSessionBySid(token)['userId']
     FollowAlreadyExists = get_collection(
         'follows').find_one({'userId': userId, 'followId': followId})
     check(FollowAlreadyExists, FollowErrorStat.ERR_FOLLOW_NOT_FOUND.value)
