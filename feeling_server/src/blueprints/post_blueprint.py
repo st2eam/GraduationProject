@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from schema import Schema, Optional
-from ..models import ApiResp, JsonResp
+from schema import Schema, Optional, Use
+from ..models import ApiResp, IPagination, JsonResp
 from ..services import post_service
 
 
@@ -11,8 +11,20 @@ bp = Blueprint('post', __name__, url_prefix='/api/post')
 # @description 帖子推荐
 # =====================================
 @bp.route('/recommend', methods=["GET"])
-def get_postlist():
-    return
+def recommend():
+    props = Schema({
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    res = post_service.get_recommend(
+        request.cookies['token'],
+        IPagination(
+            prev=props.get('prev'),
+            next=props.get('next'),
+            limit=props.get('limit', 10)
+        ))
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================
@@ -60,7 +72,7 @@ def create_forward():
     token = request.cookies.get('token')
     res = post_service.create_forward(
         token=token, relationId=data['relationId'], content=data['content'], imgs=data['imgs'])
-    return jsonify(ApiResp(ApiResp(data=res)))
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================
@@ -68,7 +80,12 @@ def create_forward():
 # =====================================
 @bp.route('/get_detail', methods=["GET"])
 def get_detail():
-    return 'Hello get_detail!'
+    props = Schema({
+        '_id': str,
+    }).validate(dict(request.args))
+    token = request.cookies.get('token')
+    res = post_service.get_detail(token=token, id=props.get('_id'))
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================
@@ -76,7 +93,21 @@ def get_detail():
 # =====================================
 @bp.route('/get_comments', methods=["GET"])
 def get_comments():
-    return 'Hello get_comments!'
+    props = Schema({
+        '_id': str,
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    res = post_service.get_comments(
+        props.get('_id'),
+        request.cookies['token'],
+        IPagination(
+            prev=props.get('prev'),
+            next=props.get('next'),
+            limit=props.get('limit', 10)
+        ))
+    return jsonify(ApiResp(data=res))
 
 
 # =====================================

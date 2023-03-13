@@ -17,7 +17,7 @@ import { getStringifyObj } from '@/utils/qs'
 export async function getHomePosts({ next = '', limit = 10 }: IPagination) {
   const res = await request.httpGet<IResp<IPostItemResp>>(
     EPostApi.Prefix +
-      EPostApi.GetFollowPost +
+      EPostApi.GetRecommend +
       '?' +
       getStringifyObj({ next, limit: String(limit) })
   )
@@ -31,7 +31,7 @@ export async function getHomePosts({ next = '', limit = 10 }: IPagination) {
  */
 export async function getPostDetail({ _id }: { _id: string }) {
   const res = await request.httpGet<IResp<IPostItem>>(
-    EPostApi.Prefix + EPostApi.GetPostDetail + '?' + getStringifyObj({ _id })
+    EPostApi.Prefix + EPostApi.GetDetail + '?' + getStringifyObj({ _id })
   )
   return res
 }
@@ -106,7 +106,7 @@ export async function createForward({ relationId, content, imgs }: ICreate) {
  */
 export async function deletePost({ _id }: { _id: string }) {
   const res = await request.httpPost<IResp>(EPostApi.Prefix + EPostApi.Delete, {
-    _id
+    id: _id
   })
   return res
 }
@@ -117,10 +117,9 @@ export async function deletePost({ _id }: { _id: string }) {
  * @returns IResp
  */
 export async function likePost({ _id }: { _id: string }) {
-  const res = await request.httpPost<IResp>(
-    EPostApi.Prefix + EPostApi.ThumbsUp,
-    { _id }
-  )
+  const res = await request.httpPost<IResp>(EPostApi.Prefix + EPostApi.Like, {
+    id: _id
+  })
   return res
 }
 
@@ -130,9 +129,8 @@ export async function likePost({ _id }: { _id: string }) {
  * @returns IResp
  */
 export async function unLikePost({ _id }: { _id: string }) {
-  const res = await request.httpPost<IResp>(
-    EPostApi.Prefix + EPostApi.CancelThumbsUp,
-    { _id }
-  )
+  const res = await request.httpPost<IResp>(EPostApi.Prefix + EPostApi.Unlike, {
+    id: _id
+  })
   return res
 }

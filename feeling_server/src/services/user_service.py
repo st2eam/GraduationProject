@@ -37,10 +37,10 @@ def register(userId: str, password: str, sex: ESexType, avatar: str, banner: str
 # @description 登录
 # =====================================
 def login(username: str, password: str, ip: str):
-    date_cursor = get_collection('users').find(
+    data_cursor = get_collection('users').find(
         {"$or": [{'email': username}, {'userId': username}]})
     arr = []
-    for x in date_cursor:
+    for x in data_cursor:
         arr.append(x)
     check(len(arr) == 1, UserErrorStat.ERR_USER_NOT_FOUND.value)
     user = arr[0]

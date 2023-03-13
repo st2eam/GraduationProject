@@ -9,7 +9,7 @@ from schema import SchemaError
 
 
 app = Flask(__name__)
-
+app.debug = True
 database.init_db()
 load_dotenv(verbose=True)
 app.json_encoder = JsonEncoder
@@ -63,4 +63,4 @@ def handle_key_error(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

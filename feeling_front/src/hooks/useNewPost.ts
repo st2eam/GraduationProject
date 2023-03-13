@@ -31,7 +31,7 @@ const useNewPost = () => {
         urlList.push(String(url))
       }
       services[type]({ content, imgs: urlList, relationId }).then((res) => {
-        if (res.code === 0) {
+        if ((res.message = 'ok')) {
           Toast.show({
             icon: 'success',
             content: '发布成功'

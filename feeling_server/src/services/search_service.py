@@ -8,7 +8,7 @@ from ..services import post_service, session_service
 def search_post(token: str, props: ISearch):
     hasNext = False
     if (props.next):
-        date_cursor = get_collection('posts').aggregate(
+        data_cursor = get_collection('posts').aggregate(
             [*post_service.filterDeleted,
              *post_service.relatInfo,
              *post_service.userInfo,
@@ -19,7 +19,7 @@ def search_post(token: str, props: ISearch):
              }},
              {'$sort': {'_id': -1}}, {'$limit': props.limit}])
     else:
-        date_cursor = get_collection('posts').aggregate(
+        data_cursor = get_collection('posts').aggregate(
             [*post_service.filterDeleted,
              *post_service.relatInfo,
              *post_service.userInfo,
@@ -30,7 +30,7 @@ def search_post(token: str, props: ISearch):
                 {'$sort': {'_id': -1}}, {'$limit': props.limit}])
 
     arr = []
-    for x in date_cursor:
+    for x in data_cursor:
         arr.append(x)
     hasNext = len(arr) == props.limit
     return {
@@ -42,7 +42,7 @@ def search_post(token: str, props: ISearch):
 def search_img(token: str, props: ISearch):
     hasNext = False
     if (props.next):
-        date_cursor = get_collection('posts').aggregate(
+        data_cursor = get_collection('posts').aggregate(
             [*post_service.filterDeleted,
              *post_service.relatInfo,
              *post_service.userInfo,
@@ -54,7 +54,7 @@ def search_img(token: str, props: ISearch):
              }},
              {'$sort': {'_id': -1}}, {'$limit': props.limit}])
     else:
-        date_cursor = get_collection('posts').aggregate(
+        data_cursor = get_collection('posts').aggregate(
             [*post_service.filterDeleted,
              *post_service.relatInfo,
              *post_service.userInfo,
@@ -65,7 +65,7 @@ def search_img(token: str, props: ISearch):
              }},
                 {'$sort': {'_id': -1}}, {'$limit': props.limit}])
     arr = []
-    for x in date_cursor:
+    for x in data_cursor:
         arr.append(x)
     hasNext = len(arr) == props.limit
     return {
@@ -78,7 +78,7 @@ def search_user(token: str, props: ISearch):
     userId = session_service.getSessionBySid(token)['userId']
     hasNext = False
     if (props.next):
-        date_cursor = get_collection('users').aggregate([
+        data_cursor = get_collection('users').aggregate([
             {
                 '$match': {
                     '$or': [{
@@ -177,7 +177,7 @@ def search_user(token: str, props: ISearch):
             }
         ])
     else:
-        date_cursor = get_collection('users').aggregate([
+        data_cursor = get_collection('users').aggregate([
             {
                 '$match': {
                     '$or': [{
@@ -273,7 +273,7 @@ def search_user(token: str, props: ISearch):
             }
         ])
     arr = []
-    for x in date_cursor:
+    for x in data_cursor:
         arr.append(x)
     hasNext = len(arr) == props.limit
     res = [

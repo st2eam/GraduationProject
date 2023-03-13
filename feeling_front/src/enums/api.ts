@@ -21,15 +21,15 @@ export enum EUserApi {
 
 export enum EPostApi {
   Prefix = '/post',
-  CancelThumbsUp = '/cancel_thumbs_up',
   CreateComment = '/create_comment',
   CreateForward = '/create_forward',
   CreatePost = '/create_post',
   Delete = '/delete',
-  GetFollowPost = '/get_follow_post',
-  GetPostDetail = '/get_post_detail',
+  GetRecommend = '/recommend',
+  GetDetail = '/get_detail',
   GetComments = '/get_comments',
-  ThumbsUp = '/thumbs_up'
+  Unlike = '/unlike',
+  Like = '/like'
 }
 
 export enum ENotifyApi {

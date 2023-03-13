@@ -5,7 +5,7 @@ export interface IPostItem extends IPost {
   user: {
     avatar: string
     userId: string
-    nickname: string
+    email: string
   }
   relate?: {
     post: IPostItem[]
@@ -13,7 +13,7 @@ export interface IPostItem extends IPost {
       {
         userId: string
         avatar: string
-        nickname: string
+        email: string
       }
     ]
   }

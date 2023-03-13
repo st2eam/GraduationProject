@@ -56,10 +56,10 @@ const CommentItem = (props: IPostItem) => {
         <main className={styles.right}>
           <div className={styles.postItemHeader}>
             <span className={styles.nickname}>
-              {props.relate?.user[0].nickname}
+              {props.relate?.user[0].userId}
             </span>
             <span>
-              {props.relate?.user[0].userId}
+              {props.relate?.user[0].email}
               {getLastTimeStr(props.relate?.post[0].createdAt ?? 0)}
             </span>
           </div>
@@ -88,7 +88,7 @@ const CommentItem = (props: IPostItem) => {
             </span>
           </div>
           <div className={styles.userInfo}>
-            <span className={styles.nickname}>{props.user.nickname}</span>
+            <span className={styles.nickname}>{props.user.email}</span>
             <span className={styles.userId}>{props.user.userId}</span>
           </div>
         </main>

@@ -159,7 +159,7 @@ const Detail = () => {
                 src={post.user.avatar || ''}
                 onClick={(e) => linkToUser(e)}
               />
-              <h4 className={styles.nickname}>{post.user.nickname}</h4>
+              <h4 className={styles.nickname}>{post.user.userId}</h4>
             </div>
           )
         }

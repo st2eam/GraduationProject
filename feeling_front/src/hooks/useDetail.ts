@@ -22,7 +22,7 @@ export function useDetail(_id: string) {
       const res = await getPostDetail({ _id })
       setPost(res.data! as IPostItem)
       const comment = await getComments({ _id })
-      if (comment.code === 0) {
+      if (comment.message === 'ok') {
         setComments(comment.data?.items as IPostItem[])
         if (comment.data?.hasNext === true) {
           setHasNext(true)
@@ -41,7 +41,7 @@ export function useDetail(_id: string) {
   const loadmore = useCallback(async () => {
     try {
       const comment = await getComments({ _id, next })
-      if (comment.code === 0) {
+      if (comment.message === 'ok') {
         setComments([...comments, ...(comment.data?.items as IPostItem[])])
         if (comment.data?.hasNext === true) {
           setHasNext(true)
@@ -59,7 +59,7 @@ export function useDetail(_id: string) {
 
   const handleDelete = async () => {
     const res = await deletePost({ _id })
-    if (res.code === 0) {
+    if (res.message === 'ok') {
       Toast.show({
         icon: 'success',
         content: '删除成功'
@@ -76,7 +76,7 @@ export function useDetail(_id: string) {
 
   const ThumbsUp = async () => {
     const res = await likePost({ _id })
-    if (res.code === 0) {
+    if (res.message === 'ok') {
       Toast.show('点赞成功')
       return true
     } else {
@@ -86,7 +86,7 @@ export function useDetail(_id: string) {
 
   const CancelThumbsUp = async () => {
     const res = await unLikePost({ _id })
-    if (res.code === 0) {
+    if (res.message === 'ok') {
       Toast.show('取消点赞成功')
       return true
     } else {

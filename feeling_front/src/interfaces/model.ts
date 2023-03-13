@@ -53,10 +53,12 @@ export interface IDirectMsg {
 
 export interface IPost {
   _id: string
+  classify: string
   userId: string
   relationId: string // 如果是评论则为评论id，如果是转发则为转发id
   type: EPostType
   imgs: string[]
+  label: object
   content: string
   likes: number
   comments: number

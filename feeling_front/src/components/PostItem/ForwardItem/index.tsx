@@ -30,7 +30,7 @@ const ForwardItem = (props: IPostItem) => {
     <div className={styles.ForwardItem}>
       <div className={styles.ForwardItemHeader} onClick={(e) => linkToPost(e)}>
         <Avatar className={styles.avatar} src={props.user.avatar || ''} />
-        <span className={styles.nickname}>{props.user.nickname}</span>
+        <span className={styles.nickname}>{props.user.userId}</span>
         <span>
           {props.userId} · {getLastTimeStr(props.createdAt)}
         </span>
