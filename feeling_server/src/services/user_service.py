@@ -3,8 +3,7 @@ import uuid
 
 from ..utils.md5 import *
 from ..utils.check import *
-from ..utils.bsonify import *
-from ..models import EUserStatus, ESexType, IUser, ISession
+from ..models import EUserStatus, ESexType
 from ..database import get_collection
 from ..services import session_service, follow_service
 
@@ -18,17 +17,17 @@ def register(userId: str, password: str, sex: ESexType, avatar: str, banner: str
         'users').find_one({'userId': userId})
     check(not EmailAlreadyExists, UserErrorStat.ERR_EMAIL_ALREADY_EXISTS.value)
     check(not UserAlreadyExists, UserErrorStat.ERR_USER_ALREADY_EXISTS.value)
-    user = bsonify(IUser(
-        userId=userId,
-        password=md5(password),
-        email=email,
-        sex=sex,
-        avatar=avatar,
-        banner=banner,
-        bio='',
-        createdAt=time.time()*1000,
-        status=EUserStatus.Normal.value
-    ))
+    user = {
+        'userId': userId,
+        'password': md5(password),
+        'email': email,
+        'sex': sex,
+        'avatar': avatar,
+        'banner': banner,
+        'bio': '',
+        'createdAt': time.time() * 1000,
+        'status': EUserStatus.Normal.value
+    }
     res = get_collection('users').insert_one(user)
     return str(res.inserted_id)
 
@@ -51,12 +50,12 @@ def login(username: str, password: str, ip: str):
     session = session_service.getSessionByUserId(user['userId'])
     if not session:
         UUID = str(uuid.uuid1())
-        session = bsonify(ISession(
-            userId=user['userId'],
-            sid=UUID,
-            ip=ip,
-            createdAt=time.time()*1000
-        ))
+        session = {
+            "userId": user['userId'],
+            "sid": UUID,
+            "ip": ip,
+            "createdAt": time.time()*1000
+        }
         get_collection('session').insert_one(session)
         return UUID
     else:
@@ -82,7 +81,7 @@ def validate_token(token: str):
 # =====================================
 # @description 获取用户信息
 # =====================================
-def get_user_info(token: str, otherUserId: str):
+def get_user_info(token: str, otherUserId=''):
     currLoginUserId = session_service.getSessionBySid(token)['userId']
     userId = otherUserId if bool(otherUserId) else currLoginUserId
     user = get_collection('users').find_one({'userId': userId})

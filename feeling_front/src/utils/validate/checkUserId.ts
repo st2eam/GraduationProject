@@ -42,9 +42,9 @@ export function checkUserId(_: any, value: string) {
     if (userIdLen === 0) {
       return Promise.reject(new Error('请输入名称'))
     }
-    if (userIdLen < 2 || userIdLen > 16) {
-      return Promise.reject(new Error('名称长度不符规范，请输入2到16个字符'))
-    }
+    // if (userIdLen < 2 || userIdLen > 17) {
+    //   return Promise.reject(new Error('名称长度不符规范，请输入2到16个字符'))
+    // }
     // 非法字符
     if (userIdRegex.test(value) && userIdRegex.lastIndex === value.length - 1) {
       return Promise.reject(new Error('名称含有非法字符!'))

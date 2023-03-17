@@ -2,7 +2,6 @@ import { Badge, TabBar } from 'antd-mobile'
 import { ReactComponent as WechatIcon } from '@/assets/icons/home.svg'
 import { ReactComponent as SearchIcon } from '@/assets/icons/search.svg'
 import { ReactComponent as NotifyIcon } from '@/assets/icons/notify.svg'
-import { ReactComponent as MessageIcon } from '@/assets/icons/message.svg'
 import { useContext, useEffect, useState } from 'react'
 import { newPostContext } from '@/hooks/store'
 import { EPageName, EPagePath } from '@/enums/page'
@@ -11,25 +10,25 @@ import { useNavigate } from 'react-router-dom'
 import styles from './style.module.scss'
 import classnames from 'classnames'
 // import useMessage from '@/hooks/useMessage'
-// import useNotify from '@/hooks/useNotify'
-// import { useRequest } from 'ahooks'
+import useNotify from '@/hooks/useNotify'
+import { useRequest } from 'ahooks'
 
 function HomeTabBar() {
   const { currPagePath, currPageName } = useCurrentPage()
   const { newPost } = useContext(newPostContext)
-  // const { hasUnread, isUnread } = useNotify()
+  const { hasUnread, isUnread } = useNotify()
   // const { getUnreadCount, unReadCount } = useMessage()
 
-  // useRequest(
-  //   async () => {
-  //     await getUnreadCount()
-  //     await isUnread()
-  //   },
-  //   {
-  //     pollingInterval: 1500,
-  //     pollingErrorRetryCount: 3
-  //   }
-  // )
+  useRequest(
+    async () => {
+      // await getUnreadCount()
+      await isUnread()
+    },
+    {
+      pollingInterval: 1500,
+      pollingErrorRetryCount: 3
+    }
+  )
 
   const tabs = [
     {
@@ -89,28 +88,28 @@ function HomeTabBar() {
           })}
         />
       ),
-      // badge: hasUnread ? Badge.dot : undefined
-    },
-    {
-      key: EPagePath.MESSAGE,
-      title: (active: boolean) => (
-        <span
-          className={classnames({
-            [styles.tabBarItemActive]: active
-          })}
-        >
-          {EPageName.MESSAGE}
-        </span>
-      ),
-      icon: (active: boolean) => (
-        <MessageIcon
-          className={classnames({
-            [styles.tabBarItemActive]: active
-          })}
-        />
-      ),
-      // badge: unReadCount
+      badge: hasUnread ? Badge.dot : undefined
     }
+    // {
+    //   key: EPagePath.MESSAGE,
+    //   title: (active: boolean) => (
+    //     <span
+    //       className={classnames({
+    //         [styles.tabBarItemActive]: active
+    //       })}
+    //     >
+    //       {EPageName.MESSAGE}
+    //     </span>
+    //   ),
+    //   icon: (active: boolean) => (
+    //     <MessageIcon
+    //       className={classnames({
+    //         [styles.tabBarItemActive]: active
+    //       })}
+    //     />
+    //   )
+    //   // badge: unReadCount
+    // }
   ]
 
   const [activeKey, setActiveKey] = useState(currPagePath)

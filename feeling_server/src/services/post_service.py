@@ -3,11 +3,10 @@ import re
 
 from bson import ObjectId
 
-from ..models import ENoticeType, EPostType, ILikes, IPagination, IPost, ELogType
+from ..models import ENoticeType, EPostType,  IPagination,  ELogType
 from ..utils.check import *
-from ..utils.bsonify import *
 from ..database import get_collection
-from ..services import session_service, notice_service, log_service
+from ..services import session_service, notice_service, log_service, user_service
 from ..bert import NER_MAIN, TextClassifier_MAIN
 
 
@@ -87,7 +86,7 @@ def get_recommend(token: str, options: IPagination):
         },
         {
             '$lookup': {
-                'from': 'logs',
+                'from': 'likes',
                 'localField': '_id',
                 'foreignField': 'postId',
                 'as': 'hasLikes'
@@ -95,11 +94,7 @@ def get_recommend(token: str, options: IPagination):
         },
         {
             '$addFields': {
-                'isLike': {
-                    '$and': [
-                        {'$in': ['userId', '$hasLikes.userId']},
-                        {'$eq': ['$hasLikes.type', ELogType.Like.value]}]
-                }
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
             }
         },
         {
@@ -158,19 +153,19 @@ def create_post(token: str, content: str, imgs: list[str], label: list[str]):
     if label:
         result_NER.update({'customize': label})
     userId = session_service.getSessionBySid(token)['userId']
-    post = bsonify(IPost(
-        userId=userId,
-        relationId=None,
-        type=EPostType.Post.value,
-        imgs=imgs,
-        content=content,
-        classify=result_Classify,
-        label=result_NER,
-        likes=0,
-        comments=0,
-        forwards=0,
-        createdAt=time.time()*1000
-    ))
+    post = {
+        'userId': userId,
+        'relationId': None,
+        'type': EPostType.Post.value,
+        'imgs': imgs,
+        'content': content,
+        'classify': result_Classify,
+        'label': result_NER,
+        'likes': 0,
+        'comments': 0,
+        'forwards': 0,
+        'createdAt': time.time() * 1000
+    }
     res = get_collection('posts').insert_one(post)
     log_service.addItem(userId=userId, postId=res.inserted_id,
                         type=ELogType.Post.value)
@@ -184,19 +179,19 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
     check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
-    comment = bsonify(IPost(
-        userId=userId,
-        relationId=ObjectId(relationId),
-        type=EPostType.Comment.value,
-        imgs=imgs,
-        content=content,
-        classify=post['classify'],
-        label=post['label'],
-        likes=0,
-        comments=0,
-        forwards=0,
-        createdAt=time.time()*1000
-    ))
+    comment = {
+        'userId': userId,
+        'relationId': ObjectId(relationId),
+        'type': EPostType.Comment.value,
+        'imgs': imgs,
+        'content': content,
+        'classify': post['classify'],
+        'label': post['label'],
+        'likes': 0,
+        'comments': 0,
+        'forwards': 0,
+        'createdAt': time.time() * 1000
+    }
     res = get_collection('posts').insert_one(comment)
     if userId != post['userId']:
         notice_service.create_notice(
@@ -218,19 +213,20 @@ def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
     check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
-    forward = bsonify(IPost(
-        userId=userId,
-        relationId=ObjectId(relationId),
-        type=EPostType.Forward.value,
-        imgs=imgs,
-        content=content,
-        classify=post['classify'],
-        label=post['label'],
-        likes=0,
-        comments=0,
-        forwards=0,
-        createdAt=time.time()*1000
-    ))
+    forward = {
+        'userId': userId,
+        'relationId': ObjectId(relationId),
+        'type': EPostType.Forward.value,
+        'imgs': imgs,
+        'content': content,
+        'classify': post['classify'],
+        'label': post['label'],
+        'likes': 0,
+        'comments': 0,
+        'forwards': 0,
+        'createdAt': time.time() * 1000
+    }
+
     res = get_collection('posts').insert_one(forward)
     if userId != post['userId']:
         notice_service.create_notice(
@@ -253,7 +249,7 @@ def get_detail(id: str, token: str):
     likeInfo = [
         {
             '$lookup': {
-                'from': 'like',
+                'from': 'likes',
                 'localField': '_id',
                 'foreignField': 'postId',
                 'as': 'hasLikes'
@@ -261,9 +257,7 @@ def get_detail(id: str, token: str):
         },
         {
             '$addFields': {
-                'isLike': {
-                    '$in': [userId, '$hasLikes.userId']
-                }
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
             }
         },
         {
@@ -293,7 +287,7 @@ def get_comments(id: str, token: str, options: IPagination):
     likeInfo = [
         {
             '$lookup': {
-                'from': 'like',
+                'from': 'likes',
                 'localField': '_id',
                 'foreignField': 'postId',
                 'as': 'hasLikes'
@@ -301,9 +295,7 @@ def get_comments(id: str, token: str, options: IPagination):
         },
         {
             '$addFields': {
-                'isLike': {
-                    '$in': [userId, '$hasLikes.userId']
-                }
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
             }
         },
         {
@@ -332,7 +324,6 @@ def get_comments(id: str, token: str, options: IPagination):
             {"$match": {"userId": userId}},
             {"$limit": options.limit}
         ])
-
     else:
         data_cursor = get_collection('posts').aggregate([
             *option,
@@ -361,11 +352,8 @@ def like(id: str, token: str):
     check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
-    like = bsonify(
-        ILikes(userId=userId, postId=ObjectId(id), createdAt=time.time()*1000))
-    res = get_collection('likes').insert_one(like)
-    log_service.addItem(userId=userId, postId=ObjectId(id),
-                        type=ELogType.Like.value)
+    res = log_service.addItem(userId=userId, postId=ObjectId(id),
+                              type=ELogType.Like.value)
     return str(res.inserted_id)
 
 
@@ -409,3 +397,150 @@ def delete(id: str, token: str):
     })
     for comment in comments:
         delete(comment['_id'], token=token)
+
+
+def get_user_post(token: str, relationId: str, options: IPagination):
+    userId = user_service.get_user_info(token, relationId)['userId']
+    option = [
+        *filterDeleted,
+        *userInfo,
+        *relatInfo,
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'hasLikes'
+            }
+        },
+        {
+            '$addFields': {
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
+            }
+        },
+        {
+            '$project': {
+                'hasLikes': 0
+            }
+        },
+        {'$sort': {'_id': -1}}
+    ]
+    if (options.next):
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {'$match': {'userId': userId,
+                        'type': {'$ne': EPostType.Comment.value},
+                        '_id': {'$lt': ObjectId(options.next)}}},
+            {'$limit': options.limit}
+        ])
+    else:
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {'$match': {'userId': userId, 'type': {'$ne': EPostType.Comment.value}}},
+            {'$limit': options.limit}
+        ])
+    items = [x for x in data_cursor]
+    hasNext = len(items) == options.limit
+    return {'items': items, 'hasNext': hasNext}
+
+
+def get_user_img_post(token: str, relationId: str, options: IPagination):
+    userId = user_service.get_user_info(token, relationId)['userId']
+    option = [
+        *filterDeleted,
+        *userInfo,
+        *relatInfo,
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'hasLikes'
+            }
+        },
+        {
+            '$addFields': {
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
+            }
+        },
+        {
+            '$project': {
+                'hasLikes': 0
+            }
+        },
+        {'$sort': {'_id': -1}}
+    ]
+    if (options.next):
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {'$match': {'userId': userId,
+                        'type': {'$ne': EPostType.Comment.value},
+                        'imgs': {'$ne': []},
+                        '_id': {'$lt': ObjectId(options.next)}}},
+            {'$limit': options.limit}
+        ])
+    else:
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {'$match': {'userId': userId,
+                        'type': {'$ne': EPostType.Comment.value},
+                        'imgs': {'$ne': []}}},
+            {'$limit': options.limit}
+        ])
+    items = [x for x in data_cursor]
+    hasNext = len(items) == options.limit
+    return {'items': items, 'hasNext': hasNext}
+
+
+def get_user_like_post(token: str, relationId: str, options: IPagination):
+    userId = user_service.get_user_info(token, relationId)['userId']
+    option = [
+        *filterDeleted,
+        *userInfo,
+        *relatInfo,
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'likePosts'
+            }
+        },
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'hasLikes'
+            }
+        },
+        {
+            '$addFields': {
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
+            }
+        },
+        {
+            '$project': {
+                'hasLikes': 0
+            }
+        },
+        {'$unwind': '$likePosts'},
+        {'$match': {'likePosts.userId': userId}},
+        {'$sort': {'_id': -1}}
+    ]
+    if (options.next):
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {'$match': {'type': {'$ne': EPostType.Comment.value},
+                        '_id': {'$lt': ObjectId(options.next)}}},
+            {'$limit': options.limit}
+        ])
+    else:
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {'$match': {'type': {'$ne': EPostType.Comment.value}}},
+            {'$limit': options.limit}
+        ])
+    items = [x for x in data_cursor]
+    hasNext = len(items) == options.limit
+    return {'items': items, 'hasNext': hasNext}

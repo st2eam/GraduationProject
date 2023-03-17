@@ -12,7 +12,7 @@ import {
   IUserSubscribeResp,
   IUserInfoResp
 } from '@/interfaces/response/user'
-import { EUserApi } from '@/enums/api'
+import { EUserApi, EPostApi } from '@/enums/api'
 import { IPostItemResp } from '@/interfaces/response/post'
 import { getStringifyObj } from '@/utils/qs'
 
@@ -48,7 +48,7 @@ export async function getUserFollows({
 }: IGetFollows) {
   const res = await request.httpGet<IResp<IUserFollowResp>>(
     EUserApi.Prefix +
-      EUserApi.GetFollows +
+      EUserApi.GetFollowers +
       '/' +
       id +
       '?' +
@@ -64,7 +64,7 @@ export async function getUserSubscribes({
 }: IGetFollows) {
   const res = await request.httpGet<IResp<IUserSubscribeResp>>(
     EUserApi.Prefix +
-      EUserApi.GetSubscribes +
+      EUserApi.GetSubscribers +
       '/' +
       id +
       '?' +
@@ -79,8 +79,8 @@ export async function getUserHomePosts({
   limit = 5
 }: IGetFollows) {
   const res = await request.httpGet<IResp<IPostItemResp>>(
-    EUserApi.Prefix +
-      EUserApi.GetPost +
+    EPostApi.Prefix +
+      EPostApi.GetPost +
       '/' +
       id +
       '?' +
@@ -95,8 +95,8 @@ export async function getUserHomeImgPosts({
   limit = 5
 }: IGetFollows) {
   const res = await request.httpGet<IResp<IPostItemResp>>(
-    EUserApi.Prefix +
-      EUserApi.GetImgPost +
+    EPostApi.Prefix +
+      EPostApi.GetImgPost +
       '/' +
       id +
       '?' +
@@ -111,8 +111,8 @@ export async function getUserHomeLikePosts({
   limit = 5
 }: IGetFollows) {
   const res = await request.httpGet<IResp<any>>(
-    EUserApi.Prefix +
-      EUserApi.GetLikePost +
+    EPostApi.Prefix +
+      EPostApi.GetLikePost +
       '/' +
       id +
       '?' +

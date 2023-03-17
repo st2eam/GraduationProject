@@ -28,6 +28,72 @@ def recommend():
 
 
 # =====================================
+# @description 个人中心帖子列表
+# =====================================
+@bp.route('/get_user_post', methods=["GET"])
+@bp.route('/get_user_post/<id>', methods=["GET"])
+def get_user_post(id=None):
+    props = Schema({
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    token = request.cookies.get('token')
+    res = post_service.get_user_post(token=token,
+                                     relationId=id,
+                                     options=IPagination(
+                                         prev=props.get('prev'),
+                                         next=props.get('next'),
+                                         limit=props.get('limit', 10)
+                                     ))
+    return jsonify(ApiResp(data=res))
+
+
+# =====================================
+# @description 个人中心图片帖子列表
+# =====================================
+@bp.route('/get_user_img_post', methods=["GET"])
+@bp.route('/get_user_img_post/<id>', methods=["GET"])
+def get_user_img_post(id=None):
+    props = Schema({
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    token = request.cookies.get('token')
+    res = post_service.get_user_img_post(token=token,
+                                         relationId=id,
+                                         options=IPagination(
+                                             prev=props.get('prev'),
+                                             next=props.get('next'),
+                                             limit=props.get('limit', 10)
+                                         ))
+    return jsonify(ApiResp(data=res))
+
+
+# =====================================
+# @description 个人中心喜欢帖子列表
+# =====================================
+@bp.route('/get_user_like_post', methods=["GET"])
+@bp.route('/get_user_like_post/<id>', methods=["GET"])
+def get_user_like_post(id=None):
+    props = Schema({
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    token = request.cookies.get('token')
+    res = post_service.get_user_like_post(token=token,
+                                          relationId=id,
+                                          options=IPagination(
+                                              prev=props.get('prev'),
+                                              next=props.get('next'),
+                                              limit=props.get('limit', 10)
+                                          ))
+    return jsonify(ApiResp(data=res))
+
+
+# =====================================
 # @description 创建帖子
 # =====================================
 @bp.route('/create_post', methods=["POST"])

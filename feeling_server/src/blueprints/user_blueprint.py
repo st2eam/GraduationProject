@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
-from schema import Schema, Optional
+from schema import Schema, Optional, Use
 
-from ..models import ApiResp
+from ..models import ApiResp, IPagination
 from ..services import user_service, follow_service
 
 bp = Blueprint('user', __name__, url_prefix='/api/user')
@@ -53,4 +53,42 @@ def unfollow():
     }).validate(request.json)
     token = request.cookies.get('token')
     res = follow_service.unfollow(token=token, followId=data['id'])
+    return jsonify(ApiResp(data=res))
+
+
+@bp.route('/follower_list', methods=["GET"])
+@bp.route('/follower_list/<id>', methods=["GET"])
+def follow_list(id=None):
+    props = Schema({
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    token = request.cookies.get('token')
+    res = follow_service.follower_list(token=token,
+                                       relationId=id,
+                                       options=IPagination(
+                                           prev=props.get('prev'),
+                                           next=props.get('next'),
+                                           limit=props.get('limit', 10)
+                                       ))
+    return jsonify(ApiResp(data=res))
+
+
+@bp.route('/subscriber_list', methods=["GET"])
+@bp.route('/subscriber_list/<id>', methods=["GET"])
+def subscriber_list(id=None):
+    props = Schema({
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    token = request.cookies.get('token')
+    res = follow_service.subscriber_list(token=token,
+                                         relationId=id,
+                                         options=IPagination(
+                                             prev=props.get('prev'),
+                                             next=props.get('next'),
+                                             limit=props.get('limit', 10)
+                                         ))
     return jsonify(ApiResp(data=res))

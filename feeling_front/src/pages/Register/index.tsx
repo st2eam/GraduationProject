@@ -12,12 +12,12 @@ function Register() {
 
   const confirmRegister = async () => {
     const values = form.getFieldsValue()
-    const { username, password, email, sex, banner = '', avatar = '' } = values
+    const { userId, password, email, sex, banner = '', avatar = '' } = values
     try {
       // validate info
       await form.validateFields()
       const registerRes = await handleRegister({
-        username,
+        userId,
         password,
         email,
         sex,
@@ -27,7 +27,7 @@ function Register() {
 
       if (registerRes) {
         await handleLogin({
-          username: username,
+          username: userId,
           password: password
         })
       }
@@ -62,7 +62,7 @@ function Register() {
         requiredMarkStyle="none"
       >
         <Form.Item
-          name="username"
+          name="userId"
           label="用户名"
           rules={[{ validator: checkUserId }]}
         >

@@ -12,11 +12,8 @@ export enum EUserApi {
   SetInfo = '/set_info',
   Follow = '/follow',
   Unfollow = '/unfollow',
-  GetFollows = '/get_follows',
-  GetSubscribes = '/get_subscribes',
-  GetPost = '/get_post',
-  GetImgPost = '/get_img_post',
-  GetLikePost = '/get_post_like'
+  GetFollowers = '/follower_list',
+  GetSubscribers = '/subscriber_list'
 }
 
 export enum EPostApi {
@@ -28,18 +25,21 @@ export enum EPostApi {
   GetRecommend = '/recommend',
   GetDetail = '/get_detail',
   GetComments = '/get_comments',
+  GetPost = '/get_user_post',
+  GetImgPost = '/get_user_img_post',
+  GetLikePost = '/get_user_like_post',
   Unlike = '/unlike',
   Like = '/like'
 }
 
 export enum ENotifyApi {
-  Prefix = '/notify',
+  Prefix = '/notice',
   Get = '/get',
   UpdateStatus = '/update_status',
-  GetHasUnread = '/get_has_unread',
+  GetHasUnread = '/get_unread',
   Delete = '/delete',
-  setAllNotifyToRead = '/set_all_notify_read',
-  setAllNotifyToDelete = '/set_all_notify_delete'
+  setAllNotifyToRead = '/read_all',
+  setAllNotifyToDelete = '/delete_all'
 }
 
 export enum EUploadApi {

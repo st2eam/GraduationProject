@@ -43,7 +43,8 @@ defHttp.interceptors.request.use(
 // 设置回应拦截
 defHttp.interceptors.response.use(
   (response: { data: { code: number; message: string } }) => {
-    if (response.data.code) {
+    console.log(response)
+    if (response.data.message !== 'ok') {
       if (
         response.data.code === EUserErrorCode.ERR_USER_NOT_LOGIN &&
         !window.location.href.includes(EPagePath.LOGIN)

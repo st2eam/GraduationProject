@@ -124,7 +124,7 @@ def search_user(token: str, props: ISearch):
                             }
                         }
                     }],
-                    'as': 'hasFollowed'  # relationId用户是否关注了查找出来的userId用户关注的用户， 通常情况都是当前登录用户
+                    'as': 'haveFollowed'  # relationId用户是否关注了查找出来的userId用户关注的用户， 通常情况都是当前登录用户
                 }
             }, {
                 '$lookup': {
@@ -220,7 +220,7 @@ def search_user(token: str, props: ISearch):
                             }
                         }
                     }],
-                    'as': 'hasFollowed'  # relationId用户是否关注了查找出来的userId用户关注的用户， 通常情况都是当前登录用户
+                    'as': 'haveFollowed'  # relationId用户是否关注了查找出来的userId用户关注的用户， 通常情况都是当前登录用户
                 }
             }, {
                 '$lookup': {
@@ -279,7 +279,7 @@ def search_user(token: str, props: ISearch):
     res = [
         {
             **item,
-            'hasFollowed': len(item['hasFollowed']) != 0,
+            'haveFollowed': len(item['haveFollowed']) != 0,
             'followCounts': item['followCounts'][0]['count'] if len(item['followCounts']) else 0,
             'subscribeCounts': item['subscribeCounts'][0]['count'] if len(item['subscribeCounts']) else 0
         }

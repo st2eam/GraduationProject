@@ -10,7 +10,7 @@ export interface IEmail {
 }
 
 export interface IRegister {
-  username: string
+  userId: string
   password: string
   email: string
   sex: ESexType
