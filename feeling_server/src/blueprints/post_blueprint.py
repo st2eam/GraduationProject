@@ -2,8 +2,7 @@ from flask import Blueprint, jsonify, request
 from schema import Schema, Optional, Use
 from ..models import ApiResp, IPagination, JsonResp
 from ..services import post_service
-
-
+from ..word2vec import Word2VecModel
 bp = Blueprint('post', __name__, url_prefix='/api/post')
 
 
@@ -213,3 +212,22 @@ def delete():
     token = request.cookies.get('token')
     post_service.delete(id=data['id'], token=token)
     return jsonify(JsonResp())
+
+
+# =====================================
+# @description word2vec
+# =====================================
+@bp.route('/word2vec', methods=["POST"])
+def word2vec():
+    data = Schema({
+        'word': [str],
+        Optional('word2'): [str]
+    }).validate(request.json)
+    model = Word2VecModel.get_instance()
+    if data.get('word2'):
+        res = model.n_similarity(
+            data.get('word'), data.get('word2'))
+        res = str(res)
+    else:
+        res = model.most_similar(data.get('word'))
+    return jsonify(ApiResp(data=res))

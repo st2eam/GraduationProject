@@ -1,8 +1,8 @@
-import time
 import re
-
+import time
+import jieba
+from keybert import KeyBERT
 from bson import ObjectId
-
 from ..models import ENoticeType, EPostType,  IPagination,  ELogType
 from ..utils.check import *
 from ..database import get_collection
@@ -10,11 +10,14 @@ from ..services import session_service, notice_service, log_service, user_servic
 from ..bert import NER_MAIN, TextClassifier_MAIN
 
 
+kw_model = KeyBERT(model='paraphrase-multilingual-MiniLM-L12-v2')
+
 ner_class_list = ['address', 'book', 'company', 'game', 'goverment',
                   'movie', 'name', 'organization', 'position', 'scene', 'customize']
 
-classify_class_list = ['财经', '房产', '股票', '教育', '科技',
-                       '社会', '时政', '体育', '游戏', '娱乐']
+classify_class_list = ['财经', '房产', '股票',
+                       '教育', '科技', '社会', '时政', '体育', '游戏', '娱乐']
+
 
 filterDeleted = [{'$match': {'type': {'$ne': EPostType.Delete.value}}}]
 
@@ -150,8 +153,17 @@ def get_recommend(token: str, options: IPagination):
 def create_post(token: str, content: str, imgs: list[str], label: list[str]):
     result_Classify = TextClassifier_MAIN.predict([content])[0]
     result_NER = NER_MAIN.pos_predict([content])[0]["label"]
+    doc = " ".join(jieba.cut(content))
+    extract_keywords = kw_model.extract_keywords(doc)
+    keywords = []
+    keywords.append(result_Classify)
+    for key in result_NER:
+        keywords.extend(result_NER[key])
+    for item in extract_keywords:
+        keywords.append(item[0])
     if label:
         result_NER.update({'customize': label})
+    keywords = list(set(keywords))
     userId = session_service.getSessionBySid(token)['userId']
     post = {
         'userId': userId,
@@ -161,6 +173,7 @@ def create_post(token: str, content: str, imgs: list[str], label: list[str]):
         'content': content,
         'classify': result_Classify,
         'label': result_NER,
+        'keywords': keywords,
         'likes': 0,
         'comments': 0,
         'forwards': 0,
@@ -179,6 +192,12 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
     check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
+    doc = " ".join(jieba.cut(content))
+    extract_keywords = kw_model.extract_keywords(doc)
+    keywords = post['keywords']
+    for item in extract_keywords:
+        keywords.append(item[0])
+    keywords = list(set(keywords))
     comment = {
         'userId': userId,
         'relationId': ObjectId(relationId),
@@ -187,6 +206,7 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
         'content': content,
         'classify': post['classify'],
         'label': post['label'],
+        'keywords': keywords,
         'likes': 0,
         'comments': 0,
         'forwards': 0,
@@ -213,6 +233,12 @@ def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
     check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
+    doc = " ".join(jieba.cut(content))
+    extract_keywords = kw_model.extract_keywords(doc)
+    keywords = post['keywords']
+    for item in extract_keywords:
+        keywords.append(item[0])
+    keywords = list(set(keywords))
     forward = {
         'userId': userId,
         'relationId': ObjectId(relationId),
@@ -221,6 +247,7 @@ def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
         'content': content,
         'classify': post['classify'],
         'label': post['label'],
+        'keywords': keywords,
         'likes': 0,
         'comments': 0,
         'forwards': 0,
