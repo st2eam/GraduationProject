@@ -19,7 +19,7 @@
   .top {
     display: flex;
     justify-content: space-between;
-    .nickname {
+    .userId {
       @include text-2xl();
       font-weight: 600;
     }

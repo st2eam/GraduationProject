@@ -61,7 +61,7 @@ export default function MessageItem({
       EPagePath.MESSAGE_DETAIL.replace(
         ':FriendId',
         message.userId || ''
-      ).replace(':FriendName', message.nickname || '')
+      ).replace(':FriendName', message.userId || '')
     )
   }
   return (
@@ -76,7 +76,7 @@ export default function MessageItem({
 
         <div className={styles.messageRight}>
           <div className={styles.messageTop}>
-            <div className={styles.nickname}> {message.nickname}</div>
+            <div className={styles.userId}> {message.userId}</div>
             <div>{getLastTimeStr(message.lastSendTime)}</div>
           </div>
           <div className={styles.messageInfo}>

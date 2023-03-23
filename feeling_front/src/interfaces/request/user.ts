@@ -5,7 +5,7 @@ export interface IGetUserInfo {
 }
 
 export interface ISetUserInfo {
-  nickname?: string
+  userId?: string
   avatar?: string
   banner?: string
   bio?: string

@@ -16,14 +16,14 @@ function PersonalData() {
   const { user, setUser, handleSetUserInfo } = useUserInfo()
   const [newBanner, setNewBanner] = useState('')
   const [newAvatar, setNewAvatar] = useState('')
-  const [userForm] = Form.useForm<Pick<ISetUserInfo, 'bio' | 'nickname'>>()
+  const [userForm] = Form.useForm<Pick<ISetUserInfo, 'bio' | 'userId'>>()
   const bio = Form.useWatch('bio', userForm)
   const userId = Form.useWatch('userId', userForm)
   const handleSave = async () => {
     try {
       const value = userForm.getFieldsValue()
       await userForm.validateFields()
-      const checkNicknameRes = userIdRule(value.nickname || '')
+      const checkNicknameRes = userIdRule(value.userId || '')
       if (checkNicknameRes) {
         const result = await Dialog.confirm({
           content: '您确定要保存吗'

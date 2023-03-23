@@ -8,7 +8,7 @@
 .navBar {
   --border-bottom: solid 1px #eeeeee;
   --height: 50px;
-  .nickname {
+  .userId {
     @include navBarTitle();
   }
 }

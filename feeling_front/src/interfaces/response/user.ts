@@ -2,7 +2,7 @@ import { IFollow, IUser } from '../model'
 
 export interface ILoginResp {
   session?: string
-  nickname?: string
+  userId?: string
   avatar?: string
 }
 

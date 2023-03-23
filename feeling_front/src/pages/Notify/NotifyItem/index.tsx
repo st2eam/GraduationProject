@@ -85,7 +85,7 @@ export default function NotifyItem({
           }}
         >
           <div className={styles.notifyType}>
-            <div className={styles.nickname}> {notify.nickname}</div>
+            <div className={styles.userId}> {notify.userId}</div>
             <div>{notifyType(notify.type)}</div>
           </div>
           <div>

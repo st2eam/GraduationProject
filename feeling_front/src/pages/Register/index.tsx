@@ -54,7 +54,7 @@ function Register() {
   return (
     <div className={styles.registerWrapper}>
       <Avatar src={''} className={styles.avatar} />
-      <div className={styles.nickname}>请选择头像</div>
+      <div className={styles.userId}>请选择头像</div>
       <Form
         form={form}
         mode="card"

@@ -147,7 +147,7 @@ function Follow() {
         backArrow={<BackArrowIcon />}
         onBack={() => navigate(-1)}
       >
-        <span className={styles.nickname}>
+        <span className={styles.userId}>
           {isOthers ? otherUser.userId : user.userId}
         </span>
       </NavBar>

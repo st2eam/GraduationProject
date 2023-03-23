@@ -122,7 +122,7 @@ const PostItem = (props: IProps) => {
       />
       <div className={styles.right}>
         <div className={styles.postItemHeader} onClick={() => linkToPost()}>
-          <span className={styles.nickname}>{post.user.userId}</span>
+          <span className={styles.userId}>{post.user.userId}</span>
           <span>
             {post.userId} · {getLastTimeStr(post.createdAt)}
           </span>

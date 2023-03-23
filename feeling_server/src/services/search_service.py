@@ -88,7 +88,7 @@ def search_user(token: str, props: ISearch):
                         }
                     },
                         {
-                        'nickname': {
+                        'email': {
                             '$regex': props.keyword,
                             '$options': 'i'
                         }
@@ -187,7 +187,7 @@ def search_user(token: str, props: ISearch):
                         }
                     },
                         {
-                        'nickname': {
+                        'email': {
                             '$regex': props.keyword,
                             '$options': 'i'
                         }

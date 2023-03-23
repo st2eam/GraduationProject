@@ -55,7 +55,7 @@ const CommentItem = (props: IPostItem) => {
         </header>
         <main className={styles.right}>
           <div className={styles.postItemHeader}>
-            <span className={styles.nickname}>
+            <span className={styles.userId}>
               {props.relate?.user[0].userId}
             </span>
             <span>
@@ -88,7 +88,7 @@ const CommentItem = (props: IPostItem) => {
             </span>
           </div>
           <div className={styles.userInfo}>
-            <span className={styles.nickname}>{props.user.email}</span>
+            <span className={styles.userId}>{props.user.email}</span>
             <span className={styles.userId}>{props.user.userId}</span>
           </div>
         </main>

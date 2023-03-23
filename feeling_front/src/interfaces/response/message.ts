@@ -9,7 +9,7 @@ export interface IChatItem {
   lastMsgType: EMsgType
   unReadCount: number
   status: EMsgStatus
-  lastMsgId:string
+  lastMsgId: string
 }
 
 export interface IResChatItem {
@@ -31,12 +31,12 @@ export interface IResDirectMsg {
   msgList: IDirectMsgItem[]
   hasNext: boolean
   hasPrev: boolean
-  unReadCount:number
+  unReadCount: number
 }
 
-export interface IResUnreadCount{
-  unReadCount:number
+export interface IResUnreadCount {
+  unReadCount: number
 }
-export interface IResNewDirectMsg{
-  unReadMsg:IDirectMsgItem[]
+export interface IResNewDirectMsg {
+  unReadMsg: IDirectMsgItem[]
 }

@@ -25,7 +25,7 @@ const Post = (props: IPostItem) => {
           onClick={(e) => linkToUser(e)}
         />
         <div className={styles.userInfo}>
-          <span className={styles.nickname}>{props.user.userId}</span>
+          <span className={styles.userId}>{props.user.userId}</span>
           <span className={styles.userId}>{props.user.userId}</span>
         </div>
       </header>
