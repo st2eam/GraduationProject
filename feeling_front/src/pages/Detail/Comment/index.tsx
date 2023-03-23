@@ -58,10 +58,7 @@ const CommentItem = (props: IPostItem) => {
             <span className={styles.userId}>
               {props.relate?.user[0].userId}
             </span>
-            <span>
-              {props.relate?.user[0].email}
-              {getLastTimeStr(props.relate?.post[0].createdAt ?? 0)}
-            </span>
+            <span>{getLastTimeStr(props.relate?.post[0].createdAt ?? 0)}</span>
           </div>
           <Content
             onClick={() =>
@@ -87,10 +84,7 @@ const CommentItem = (props: IPostItem) => {
               {props.relate?.post[0].likes}
             </span>
           </div>
-          <div className={styles.userInfo}>
-            <span className={styles.userId}>{props.user.email}</span>
-            <span className={styles.userId}>{props.user.userId}</span>
-          </div>
+          <span className={styles.userId}>{props.user.userId}</span>
         </main>
       </div>
       <footer className={styles.footer}>

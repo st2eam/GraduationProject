@@ -26,7 +26,7 @@ const Post = (props: IPostItem) => {
         />
         <div className={styles.userInfo}>
           <span className={styles.userId}>{props.user.userId}</span>
-          <span className={styles.userId}>{props.user.userId}</span>
+          <span className={styles.email}>{props.user.email}</span>
         </div>
       </header>
       <main className={styles.main}>

@@ -33,7 +33,6 @@ const PostItem = (props: IProps) => {
   const { post } = props
   const { ThumbsUp, CancelThumbsUp, handleDelete } = useDetail(post._id)
   const [isLike, setIsLike] = useState(post.isLike)
-
   // 跟据传入的类型链接
   const linkToPost = () => {
     navigate(`/detail/${post._id}`)
@@ -123,9 +122,7 @@ const PostItem = (props: IProps) => {
       <div className={styles.right}>
         <div className={styles.postItemHeader} onClick={() => linkToPost()}>
           <span className={styles.userId}>{post.user.userId}</span>
-          <span>
-            {post.userId} · {getLastTimeStr(post.createdAt)}
-          </span>
+          <span>{getLastTimeStr(post.createdAt)}</span>
         </div>
         {post.type === EPostType.Comment && (
           <div className={styles.comment}>

@@ -13,11 +13,9 @@ export const getImageUploadedURL = async ({ image }: IUploadImage) => {
     if (checkWithData(res)) {
       const url = res.data!.url
       const data = new Blob([image], { type: image.type })
-      const result = await request.httpPut(url, data, {
-        'Content-Type': 'blob',
-        'x-oss-storage-class': 'Standard'
+      request.httpPut(url, data, {
+        'Content-Type': 'blob'
       })
-      console.log(result)
       const resUrl = url.split('?')[0]
       return resUrl
     }

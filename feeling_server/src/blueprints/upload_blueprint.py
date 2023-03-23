@@ -19,7 +19,6 @@ def upload(name):
     filename = 'Feeling' + str(int(time.time()*1000)) + '.' + ext
     headers = dict()
     headers['Content-Type'] = 'blob'
-    headers["x-oss-storage-class"] = "Standard"
     url = bucket.sign_url('PUT', filename, 3600,
                           slash_safe=True, headers=headers)
     return jsonify(ApiResp(data={'url': url}))

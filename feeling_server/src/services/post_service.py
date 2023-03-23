@@ -23,7 +23,7 @@ filterDeleted = [{'$match': {'type': {'$ne': EPostType.Delete.value}}}]
 
 relatInfo = [
     {'$lookup': {
-        'from': 'post',
+        'from': 'posts',
         'localField': 'relationId',
         'foreignField': '_id',
         'as': 'relate.post'
@@ -66,6 +66,7 @@ userInfo = [
             'user.openId': 0,
             'user.banner': 0,
             'user.bio': 0,
+            'user.password': 0,
             'user.status': 0
         }
     }
