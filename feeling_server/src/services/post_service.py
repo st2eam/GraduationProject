@@ -372,15 +372,22 @@ def get_comments(id: str, token: str, options: IPagination):
 
 def like(id: str, token: str):
     userId = session_service.getSessionBySid(token)['userId']
-    exist = get_collection('likes').find_one({'postId': id, 'userId': userId})
+    exist = get_collection('likes').find_one(
+        {'postId': ObjectId(id), 'userId': userId})
     check(not exist, PostErrorStat.ERR_POST_HAS_BEEN_LIKED.value)
     post = get_collection('posts').find_one_and_update(
         {'_id': ObjectId(id)}, {'$inc': {'likes': 1}})
     check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
-    res = log_service.addItem(userId=userId, postId=ObjectId(id),
-                              type=ELogType.Like.value)
+    res = get_collection('likes').insert_one(
+        {
+            'postId': ObjectId(id),
+            'userId': userId,
+            'createdAt': time.time() * 1000
+        })
+    log_service.addItem(userId=userId, postId=ObjectId(id),
+                        type=ELogType.Like.value)
     return str(res.inserted_id)
 
 
@@ -392,10 +399,10 @@ def unlike(id: str, token: str):
     check(post['type'] != EPostType.Delete.value,
           PostErrorStat.ERR_POST_HAS_BEEN_DELETED.value)
     like = get_collection('likes').find_one(
-        {'userId': userId, 'postId': id})
+        {'userId': userId, 'postId': ObjectId(id)})
     check(like, PostErrorStat.ERR_LIKE_NOT_FOUND.value)
     res = get_collection('likes').delete_one(
-        {'userId': userId, 'postId': id})
+        {'userId': userId, 'postId': ObjectId(id)})
     log_service.addItem(userId=userId, postId=ObjectId(id),
                         type=ELogType.Unlike.value)
     return res.acknowledged
