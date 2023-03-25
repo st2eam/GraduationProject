@@ -25,6 +25,7 @@ def register(userId: str, password: str, sex: ESexType, avatar: str, banner: str
         'avatar': avatar,
         'banner': banner,
         'bio': '',
+        'labels': [],
         'createdAt': time.time() * 1000,
         'status': EUserStatus.Normal.value
     }
@@ -101,9 +102,40 @@ def get_user_info(token: str, otherUserId=''):
 def set_user_info(token: str, newUserId: str, avatar: str, banner: str, bio: str):
     userId = session_service.getSessionBySid(token)['userId']
     user = get_collection('users').find_one({'userId': userId})
+    check(bool(user), UserErrorStat.ERR_USER_NOT_FOUND.value)
     userId = newUserId if newUserId else user['userId']
     avatar = avatar if avatar else user['avatar']
     banner = banner if banner else user['banner']
     res = get_collection('users').update_one({'userId': userId}, {
         '$set': {'userId': userId, 'avatar': avatar, 'bio': bio, 'banner': banner}})
+    return res.acknowledged
+
+
+# =====================================
+# @description 给用户增加标签
+# =====================================
+def addLabels(token: str, newLabels: list[str]):
+    userId = session_service.getSessionBySid(token)['userId']
+    user = get_collection('users').find_one({'userId': userId})
+    check(bool(user), UserErrorStat.ERR_USER_NOT_FOUND.value)
+    res = get_collection('users').update_one(
+        {"_id": user["_id"]},
+        {"$push": {"labels": {"$each": newLabels}}}
+    )
+    return res.acknowledged
+
+
+# =====================================
+# @description 给用户删除标签
+# =====================================
+def delLabels(token: str, newLabels: list[str]):
+    userId = session_service.getSessionBySid(token)['userId']
+    user = get_collection('users').find_one({'userId': userId})
+    check(bool(user), UserErrorStat.ERR_USER_NOT_FOUND.value)
+    labels = user['labels']
+    for x in newLabels:
+        if x in labels:
+            labels.remove(x)
+    res = get_collection('users').update_one(
+        {"_id": user["_id"]}, {'$set': {'labels': labels}})
     return res.acknowledged

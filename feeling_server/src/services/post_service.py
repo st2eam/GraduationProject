@@ -181,6 +181,7 @@ def create_post(token: str, content: str, imgs: list[str], label: list[str]):
         'createdAt': time.time() * 1000
     }
     res = get_collection('posts').insert_one(post)
+    user_service.addLabels(token=token, newLabels=keywords)
     log_service.addItem(userId=userId, postId=res.inserted_id,
                         type=ELogType.Post.value)
     return str(res.inserted_id)
@@ -222,6 +223,7 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
             relationId=ObjectId(relationId),
             content=''
         )
+    user_service.addLabels(token=token, newLabels=keywords)
     log_service.addItem(userId=userId, postId=ObjectId(
         relationId), type=ELogType.Comment.value)
     return str(res.inserted_id)
@@ -264,6 +266,7 @@ def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
             relationId=ObjectId(relationId),
             content=''
         )
+    user_service.addLabels(token=token, newLabels=keywords)
     log_service.addItem(userId=userId, postId=ObjectId(
         relationId), type=ELogType.Forward.value)
     return str(res.inserted_id)
@@ -387,6 +390,7 @@ def like(id: str, token: str):
             'userId': userId,
             'createdAt': time.time() * 1000
         })
+    user_service.addLabels(token=token, newLabels=post['keywords'])
     log_service.addItem(userId=userId, postId=ObjectId(id),
                         type=ELogType.Like.value)
     return str(res.inserted_id)
@@ -404,6 +408,7 @@ def unlike(id: str, token: str):
     check(like, PostErrorStat.ERR_LIKE_NOT_FOUND.value)
     res = get_collection('likes').delete_one(
         {'userId': userId, 'postId': ObjectId(id)})
+    user_service.delLabels(token=token, newLabels=post['keywords'])
     log_service.addItem(userId=userId, postId=ObjectId(id),
                         type=ELogType.Unlike.value)
     return res.acknowledged
@@ -422,6 +427,7 @@ def delete(id: str, token: str):
     if post['userId'] == userId:
         type = ELogType.DeletePost.value if post['type'] == EPostType.Post.value else ELogType.DeleteForward.value if post[
             'type'] == EPostType.Forward.value else ELogType.DeleteComment.value
+        user_service.delLabels(token=token, newLabels=post['keywords'])
         log_service.addItem(userId=userId, postId=ObjectId(
             id), type=type)
 
