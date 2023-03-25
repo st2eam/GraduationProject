@@ -1,5 +1,5 @@
 import threading
-from gensim.models import KeyedVectors
+from gensim.models import Word2Vec
 
 
 class Word2VecModel:
@@ -11,8 +11,8 @@ class Word2VecModel:
         if cls._instance is None:
             with cls._instance_lock:
                 if cls._instance is None:
-                    cls._instance = KeyedVectors.load_word2vec_format(
-                        'src/word2vec/sgns.merge.word')
+                    cls._instance = Word2Vec.load(
+                        'src/word2vec/word2vec.model')
         return cls._instance
 
     @classmethod
@@ -20,6 +20,6 @@ class Word2VecModel:
         if cls._instance is None:
             with cls._instance_lock:
                 if cls._instance is None:
-                    cls._instance = KeyedVectors.load_word2vec_format(
-                        'src/word2vec/sgns.merge.word')
+                    cls._instance = Word2Vec.load(
+                        'src/word2vec/word2vec.model')
                     print('Word2Vec model loaded successfully')

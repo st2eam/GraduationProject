@@ -225,9 +225,9 @@ def word2vec():
     }).validate(request.json)
     model = Word2VecModel.get_instance()
     if data.get('word2'):
-        res = model.n_similarity(
+        res = model.wv.n_similarity(
             data.get('word'), data.get('word2'))
         res = str(res)
     else:
-        res = model.most_similar(data.get('word'))
+        res = model.wv.most_similar(data.get('word'))
     return jsonify(ApiResp(data=res))
