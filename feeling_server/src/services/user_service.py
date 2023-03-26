@@ -114,8 +114,7 @@ def set_user_info(token: str, newUserId: str, avatar: str, banner: str, bio: str
 # =====================================
 # @description 给用户增加标签
 # =====================================
-def addLabels(token: str, newLabels: list[str]):
-    userId = session_service.getSessionBySid(token)['userId']
+def addLabels(userId: str, newLabels: list[str]):
     user = get_collection('users').find_one({'userId': userId})
     check(bool(user), UserErrorStat.ERR_USER_NOT_FOUND.value)
     res = get_collection('users').update_one(

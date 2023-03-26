@@ -1,14 +1,15 @@
+import random
 import re
 import time
 import jieba
-from keybert import KeyBERT
 from bson import ObjectId
+from keybert import KeyBERT
 from ..models import ENoticeType, EPostType,  IPagination,  ELogType
 from ..utils.check import *
 from ..database import get_collection
 from ..services import session_service, notice_service, log_service, user_service
 from ..bert import NER_MAIN, TextClassifier_MAIN
-
+from ..word2vec import Word2VecModel
 
 kw_model = KeyBERT(model='paraphrase-multilingual-MiniLM-L12-v2')
 
@@ -75,8 +76,9 @@ userInfo = [
 
 def get_recommend(token: str, options: IPagination):
     userId = session_service.getSessionBySid(token)['userId']
-    hasNext = False
-    option = [
+    user = get_collection('users').find_one({'userId': userId})
+    labels = user['labels']
+    follow_option = [
         *filterDeleted,
         *userInfo,
         *relatInfo,
@@ -123,30 +125,84 @@ def get_recommend(token: str, options: IPagination):
             }
         }
     ]
-    if bool(options.next):
-        data_cursor = get_collection('posts').aggregate([
-            *option,
-            {
-                '$match': {
-                    '_id': {
-                        '$lt': ObjectId(options.next)
-                    }
-                }
-            },
-            {
-                '$limit': options.limit
+    recommend_option = [
+        *filterDeleted,
+        *userInfo,
+        *relatInfo,
+        {
+            '$lookup': {
+                'from': 'follows',
+                'localField': 'userId',
+                'foreignField': 'followId',
+                'as': 'follow'
             }
-        ])
+        },
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'hasLikes'
+            }
+        },
+        {
+            '$addFields': {
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
+            }
+        },
+        {
+            '$project': {
+                'hasLikes': 0
+            }
+        },
+        {
+            '$match': {
+                '$and': [
+                    {'userId': {'$not': {'$eq': userId}}},
+                    {'follow.userId': {'$not': {'$eq': userId}}}
+                ]
+            }
+        },
+        {'$match': {'type': {'$ne': EPostType.Comment.value}}},
+        {
+            '$sort': {
+                '_id': -1
+            }
+        },
+        {
+            '$project': {
+                'follow': 0
+            }
+        }
+    ]
+    recommend_data_cursor = get_collection(
+        'posts').aggregate([*recommend_option])
+    temp = [x for x in recommend_data_cursor]
+    model = Word2VecModel.get_instance()
+    recommend_arr = sorted(temp, key=lambda x: model.wv.n_similarity(
+        x['keywords'], labels), reverse=True)
+
+    follow_data_cursor = get_collection('posts').aggregate([*follow_option])
+    follow_arr = [x for x in follow_data_cursor]
+    merged_arr = recommend_arr + follow_arr
+    sorted_arr = sorted(merged_arr, key=lambda x: x['createdAt'], reverse=True)
+    items = []
+    hasNext = False
+    if options.next:
+        next_index = None
+        for i, item in enumerate(sorted_arr):
+            if str(item['_id']) == options.next:
+                next_index = i + 1
+                break
+        if next_index is None:
+            items = []
+        else:
+            items = sorted_arr[next_index:next_index+options.limit]
     else:
-        data_cursor = get_collection('posts').aggregate([
-            *option, {
-                '$limit': options.limit
-            }
-        ])
-    arr = [x for x in data_cursor]
-    hasNext = len(arr) == options.limit
+        items = sorted_arr[:options.limit]
+    hasNext = len(items) == options.limit
     return {
-        'items': arr,
+        'items': items,
         'hasNext': hasNext
     }
 
@@ -181,7 +237,7 @@ def create_post(token: str, content: str, imgs: list[str], label: list[str]):
         'createdAt': time.time() * 1000
     }
     res = get_collection('posts').insert_one(post)
-    user_service.addLabels(token=token, newLabels=keywords)
+    user_service.addLabels(userId=userId, newLabels=keywords)
     log_service.addItem(userId=userId, postId=res.inserted_id,
                         type=ELogType.Post.value)
     return str(res.inserted_id)
@@ -223,7 +279,7 @@ def create_comment(token: str, relationId: str, content: str, imgs: list[str]):
             relationId=ObjectId(relationId),
             content=''
         )
-    user_service.addLabels(token=token, newLabels=keywords)
+    user_service.addLabels(userId=userId, newLabels=keywords)
     log_service.addItem(userId=userId, postId=ObjectId(
         relationId), type=ELogType.Comment.value)
     return str(res.inserted_id)
@@ -266,7 +322,7 @@ def create_forward(token: str, relationId: str, content: str, imgs: list[str]):
             relationId=ObjectId(relationId),
             content=''
         )
-    user_service.addLabels(token=token, newLabels=keywords)
+    user_service.addLabels(userId=userId, newLabels=keywords)
     log_service.addItem(userId=userId, postId=ObjectId(
         relationId), type=ELogType.Forward.value)
     return str(res.inserted_id)
@@ -390,7 +446,7 @@ def like(id: str, token: str):
             'userId': userId,
             'createdAt': time.time() * 1000
         })
-    user_service.addLabels(token=token, newLabels=post['keywords'])
+    user_service.addLabels(userId=userId, newLabels=post['keywords'])
     log_service.addItem(userId=userId, postId=ObjectId(id),
                         type=ELogType.Like.value)
     return str(res.inserted_id)
@@ -585,3 +641,41 @@ def get_user_like_post(token: str, relationId: str, options: IPagination):
     items = [x for x in data_cursor]
     hasNext = len(items) == options.limit
     return {'items': items, 'hasNext': hasNext}
+
+
+def create_daily_posts(data: list[str]):
+    user_array = ["老王", "小李", "Caphriel",
+                  "Rahmiel", "Naaririel", "Ophanim", "Yahoel", "Wish"]
+    for content in data:
+        now_index = user_array.index(random.choice(user_array))
+        userId = user_array[now_index+1]
+        result_Classify = TextClassifier_MAIN.predict([content])[0]
+        result_NER = NER_MAIN.pos_predict([content])[0]["label"]
+        doc = " ".join(jieba.cut(content))
+        extract_keywords = kw_model.extract_keywords(doc)
+        keywords = []
+        keywords.append(result_Classify)
+        for key in result_NER:
+            keywords.extend(result_NER[key])
+        for item in extract_keywords:
+            keywords.append(item[0])
+        keywords = list(set(keywords))
+        post = {
+            'userId': userId,
+            'relationId': None,
+            'type': EPostType.Post.value,
+            'imgs': [],
+            'content': content,
+            'classify': result_Classify,
+            'label': result_NER,
+            'keywords': keywords,
+            'likes': 0,
+            'comments': 0,
+            'forwards': 0,
+            'createdAt': time.time() * 1000
+        }
+        res = get_collection('posts').insert_one(post)
+        user_service.addLabels(userId=userId, newLabels=keywords)
+        log_service.addItem(userId=userId, postId=res.inserted_id,
+                            type=ELogType.Post.value)
+        print(userId+'成功发布一篇文章')

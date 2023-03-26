@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, json
+import requests
 from schema import Schema, Optional, Use
 from ..models import ApiResp, IPagination, JsonResp
 from ..services import post_service
@@ -231,3 +232,14 @@ def word2vec():
     else:
         res = model.wv.most_similar(data.get('word'))
     return jsonify(ApiResp(data=res))
+
+
+# =====================================
+# @description update
+# =====================================
+@bp.route('/update', methods=["GET"])
+def update():
+    response = requests.get('https://api.vvhan.com/api/60s?type=json')
+    result = response.json()
+    post_service.create_daily_posts(result['data'])
+    return jsonify(ApiResp(data=result))
