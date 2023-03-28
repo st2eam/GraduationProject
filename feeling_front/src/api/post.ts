@@ -1,4 +1,4 @@
-import * as request from '@/utils/http/axios'
+import * as request from '@/utils/axios'
 import { IResp } from '@/interfaces/response'
 import {
   ICommentResp,

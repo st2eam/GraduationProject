@@ -1,8 +1,8 @@
 import { IUploadImage } from '@/interfaces/request/upload'
 import { IResp } from '@/interfaces/response'
 import { IUploadResp } from '@/interfaces/response/upload'
-import * as request from '@/utils/http/axios'
-import { checkWithData } from '@/utils/checkHttpRes'
+import * as request from '@/utils/axios'
+import { checkWithData } from '@/utils/check'
 
 export const getImageUploadedURL = async ({ image }: IUploadImage) => {
   try {

@@ -5,7 +5,7 @@ import { IPostItem, IPostItemResp } from '@/interfaces/response/post'
 import { useCallback, useMemo, useState } from 'react'
 import { searchPost, searchImgPost, searchUser } from '@/api/search'
 import { IResp } from '@/interfaces/response'
-import { checkWithData } from '@/utils/checkHttpRes'
+import { checkWithData } from '@/utils/check'
 import { IUserInfoResp, IUserSearchResp } from '@/interfaces/response/user'
 import { useLocalStorageState } from 'ahooks'
 interface IUseSearch {

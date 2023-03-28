@@ -2,7 +2,7 @@ import { ISearchUserResp } from './../interfaces/response/search'
 import { ISearch } from '@/interfaces/request/search'
 import { IResp } from '@/interfaces/response'
 import { IPostItemResp } from '@/interfaces/response/post'
-import * as request from '@/utils/http/axios'
+import * as request from '@/utils/axios'
 import { getStringifyObj } from '@/utils/qs'
 
 export async function searchPost({ keyword, next = '', limit = 10 }: ISearch) {

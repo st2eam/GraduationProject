@@ -1,7 +1,7 @@
 import { INotifyItem } from '@/interfaces/response/notify'
 import { useCallback, useMemo, useState } from 'react'
 import * as notifyServices from '@/api/notify'
-import { check, checkWithData } from '@/utils/checkHttpRes'
+import { check, checkWithData } from '@/utils/check'
 import { IDeleteNotify, IUpdateNotifyStatus } from '@/interfaces/request/notify'
 export default function useNotify() {
   const [error, setError] = useState('')

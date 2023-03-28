@@ -3,7 +3,6 @@ import { useRequest } from 'ahooks'
 import { usePosts } from '@/hooks/usePosts'
 import { useNavigate, useParams } from 'react-router-dom'
 import { newPostContext } from '@/hooks/store'
-import { ReactComponent as MessageIcon } from '@/assets/icons/message.svg'
 import { ReactComponent as BackArrowIcon } from '@/assets/icons/back_arrow.svg'
 import { NavBar, Image } from 'antd-mobile'
 import { EPageName, EPagePath, EPersonalHomeTab } from '@/enums/page'
@@ -135,23 +134,6 @@ function PersonalHome() {
           <div className={styles.iconBox}>
             <BackArrowIcon />
           </div>
-        }
-        right={
-          isOthers && otherUser.userId ? (
-            <div
-              className={styles.iconBox}
-              onClick={() =>
-                navigate(
-                  EPagePath.MESSAGE_DETAIL.replace(
-                    ':FriendId',
-                    otherUser.userId
-                  ).replace(':FriendName', otherUser.userId)
-                )
-              }
-            >
-              <MessageIcon />
-            </div>
-          ) : null
         }
         onBack={() => navigate(-1)}
       >

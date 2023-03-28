@@ -3,7 +3,7 @@ import { EFollowTab } from '@/enums/page'
 import { IGetFollows, IGetSubscribes } from '@/interfaces/request/user'
 import { IUserFollowItemResp } from '@/interfaces/response/user'
 import { useCallback, useMemo, useState } from 'react'
-import { checkWithData } from '../utils/checkHttpRes'
+import { checkWithData } from '../utils/check'
 
 export function useFollows(type: EFollowTab) {
   const [follows, setFollows] = useState<IUserFollowItemResp[]>([])

@@ -1,7 +1,7 @@
 import { login, logout, register, security_code } from '@/api/auth'
 import { EPagePath } from '@/enums/page'
 import { IEmail, ILogin, IRegister } from '@/interfaces/request/auth'
-import { check, checkWithData } from '@/utils/checkHttpRes'
+import { check, checkWithData } from '@/utils/check'
 import { Toast } from 'antd-mobile'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

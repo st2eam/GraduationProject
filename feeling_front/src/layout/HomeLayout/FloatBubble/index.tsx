@@ -13,8 +13,6 @@ const FloatBubble = () => {
   const noRenderTarget = [
     EPagePath.LOGIN.toString(),
     EPagePath.REGISTER.toString(),
-    EPagePath.MESSAGE.toString(),
-    EPagePath.MESSAGE_DETAIL.toString().split('/')[1],
     EPagePath.PERSONAL_DATA.toString().split('/')[1]
   ]
   return noRenderTarget.includes(currPagePath.split('/')[1]) ? null : (

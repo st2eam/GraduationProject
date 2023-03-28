@@ -11,39 +11,28 @@ export function useCurrentPage() {
   }, [location])
 
   const currPageName = useMemo(() => {
-    if (currPagePath.includes(EPagePath.HOME)) {
-      return EPageName.HOME
+    switch (true) {
+      case currPagePath.startsWith(EPagePath.HOME):
+        return EPageName.HOME
+      case currPagePath.startsWith(EPagePath.SEARCH):
+        return EPageName.SEARCH
+      case currPagePath.startsWith(EPagePath.NOTIFY):
+        return EPageName.NOTIFY
+      case currPagePath.startsWith(EPagePath.Follow.replace('/:userId', '')):
+        return EPageName.FOLLOW
+      case currPagePath.startsWith(
+        EPagePath.PERSONAL_DATA.replace('/:userId', '')
+      ):
+        return EPageName.PERSONAL_DATA
+      case currPagePath.startsWith(
+        EPagePath.PERSONAL_HOME.replace('/:userId', '')
+      ):
+        return EPageName.PERSONAL_HOME
+      default:
+        return EPageName.HOME
     }
-    if (currPagePath.includes(EPagePath.SEARCH)) {
-      return EPageName.SEARCH
-    }
-    if (currPagePath.includes(EPagePath.NOTIFY)) {
-      return EPageName.NOTIFY
-    }
-    if (currPagePath.includes(EPagePath.MESSAGE)) {
-      return EPageName.MESSAGE
-    }
-    if (currPagePath.includes(EPagePath.Follow.replace('/:userId', ''))) {
-      return EPageName.FOLLOW
-    }
-    if (
-      currPagePath.includes(EPagePath.PERSONAL_DATA.replace('/:userId', ''))
-    ) {
-      return EPageName.PERSONAL_DATA
-    }
-    if (
-      currPagePath.includes(EPagePath.PERSONAL_HOME.replace('/:userId', ''))
-    ) {
-      return EPageName.PERSONAL_HOME
-    }
-    if (
-      currPagePath.includes(EPagePath.MESSAGE_DETAIL.replace('/:FriendId/:FriendName', ''))
-    ) {
-      return EPageName.MESSAGE
-    }
-
-    return EPageName.HOME
   }, [currPagePath])
+
   return {
     currPagePath,
     setCurrPagePath,

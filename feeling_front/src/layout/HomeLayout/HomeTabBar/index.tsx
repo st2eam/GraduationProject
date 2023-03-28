@@ -9,7 +9,6 @@ import { useCurrentPage } from '@/hooks/useCurrentPage'
 import { useNavigate } from 'react-router-dom'
 import styles from './style.module.scss'
 import classnames from 'classnames'
-// import useMessage from '@/hooks/useMessage'
 import useNotify from '@/hooks/useNotify'
 import { useRequest } from 'ahooks'
 
@@ -17,11 +16,9 @@ function HomeTabBar() {
   const { currPagePath, currPageName } = useCurrentPage()
   const { newPost } = useContext(newPostContext)
   const { hasUnread, isUnread } = useNotify()
-  // const { getUnreadCount, unReadCount } = useMessage()
 
   useRequest(
     async () => {
-      // await getUnreadCount()
       await isUnread()
     },
     {
@@ -90,26 +87,6 @@ function HomeTabBar() {
       ),
       badge: hasUnread ? Badge.dot : undefined
     }
-    // {
-    //   key: EPagePath.MESSAGE,
-    //   title: (active: boolean) => (
-    //     <span
-    //       className={classnames({
-    //         [styles.tabBarItemActive]: active
-    //       })}
-    //     >
-    //       {EPageName.MESSAGE}
-    //     </span>
-    //   ),
-    //   icon: (active: boolean) => (
-    //     <MessageIcon
-    //       className={classnames({
-    //         [styles.tabBarItemActive]: active
-    //       })}
-    //     />
-    //   )
-    //   // badge: unReadCount
-    // }
   ]
 
   const [activeKey, setActiveKey] = useState(currPagePath)
@@ -121,8 +98,6 @@ function HomeTabBar() {
       currPageName === EPageName.PERSONAL_HOME
     ) {
       setActiveKey(EPagePath.HOME)
-    } else if (currPageName === EPageName.MESSAGE_DETAIL) {
-      setActiveKey(EPagePath.MESSAGE)
     } else {
       setActiveKey(currPagePath)
     }

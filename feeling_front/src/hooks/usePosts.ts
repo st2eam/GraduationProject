@@ -5,7 +5,7 @@ import { IGetImgPost, IGetLikePost, IGetPost } from '@/interfaces/request/user'
 import { IResp } from '@/interfaces/response'
 import { IPostItem, IPostItemResp } from '@/interfaces/response/post'
 import { useCallback, useMemo, useState } from 'react'
-import { checkWithData } from '../utils/checkHttpRes'
+import { checkWithData } from '../utils/check'
 import {
   getUserHomeImgPosts,
   getUserHomeLikePosts,

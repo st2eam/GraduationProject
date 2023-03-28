@@ -5,7 +5,7 @@ import {
 } from '@/interfaces/request/notify'
 import { IResp } from '@/interfaces/response'
 import { IResINotifyItem, IUnReadNotify } from '@/interfaces/response/notify'
-import * as request from '@/utils/http/axios'
+import * as request from '@/utils/axios'
 import { getStringifyObj } from '@/utils/qs'
 /**
  * @description 获取通知列表

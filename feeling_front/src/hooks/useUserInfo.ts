@@ -5,7 +5,7 @@ import {
   ISetUserInfo,
   IUnfollowUser
 } from '@/interfaces/request/user'
-import { check, checkWithData } from '@/utils/checkHttpRes'
+import { check, checkWithData } from '@/utils/check'
 import { useCallback, useContext, useState } from 'react'
 import { context } from './store'
 import { Toast } from 'antd-mobile'

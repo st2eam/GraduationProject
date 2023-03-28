@@ -1,7 +1,7 @@
 import { IRegister, ILogin, IEmail } from '@/interfaces/request/auth'
 import { IResp } from '@/interfaces/response'
 import { ILoginResp, IRegisterResp } from '@/interfaces/response/user'
-import * as request from '@/utils/http/axios'
+import * as request from '@/utils/axios'
 
 // 登录
 export async function login(body: ILogin) {
