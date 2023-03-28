@@ -56,10 +56,10 @@ function HomeSideMenu({ visible, setVisible }: IHomeSideMenu) {
           src={user.avatar}
           className={styles.avatar}
           onClick={() =>
-            navigate(EPagePath.PERSONAL_HOME.replace(':username', user.userId))
+            navigate(EPagePath.PERSONAL_HOME.replace(':userId', user.userId))
           }
         />
-        <div className={styles.username}>{user.userId}</div>
+        <div className={styles.userId}>{user.userId}</div>
         <div className={styles.email}>{user.email}</div>
       </div>
       {/* 关注信息 */}
@@ -67,7 +67,7 @@ function HomeSideMenu({ visible, setVisible }: IHomeSideMenu) {
         <div
           className={styles.follow}
           onClick={() =>
-            navigate(EPagePath.Follow.replace(':username', user.userId), {
+            navigate(EPagePath.Follow.replace(':userId', user.userId), {
               state: { activeKey: EFollowTab.FOLLOW }
             })
           }

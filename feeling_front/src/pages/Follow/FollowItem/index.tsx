@@ -42,7 +42,7 @@ function FollowItem({
         {/* item right 顶部部分 */}
         <div className={styles.top}>
           {/* 用户名称和id */}
-          <div className={styles.userName}>
+          <div className={styles.userId}>
             <div className={styles.userId}>{user.userId}</div>
             <div className={styles.userId}>{user.email}</div>
             {/* 是否存在两个数据 */}

@@ -1,4 +1,4 @@
-import { getHomePosts } from '@/api/post'
+import { getHomePosts, getFollowPosts } from '@/api/post'
 import { EPageName, EPersonalHomeTab } from '@/enums/page'
 import { IPagination } from '@/interfaces/request/post'
 import { IGetImgPost, IGetLikePost, IGetPost } from '@/interfaces/request/user'
@@ -19,7 +19,7 @@ export function usePosts(page: EPageName, type?: EPersonalHomeTab) {
   const services = useMemo(
     () => ({
       [EPageName.HOME]: (params: IPagination) => getHomePosts(params),
-      [EPageName.FOLLOW]: (params: IPagination) => getHomePosts(params),
+      [EPageName.FOLLOW]: (params: IPagination) => getFollowPosts(params),
       [EPersonalHomeTab.POST]: (params: IGetPost) => getUserHomePosts(params),
       [EPersonalHomeTab.IMAGE_POST]: (params: IGetImgPost) =>
         getUserHomeImgPosts(params),
@@ -32,7 +32,7 @@ export function usePosts(page: EPageName, type?: EPersonalHomeTab) {
     async ({ id = '' }: IGetPost) => {
       try {
         let res: IResp<IPostItemResp>
-        if (page === EPageName.HOME) {
+        if (page === EPageName.HOME || page === EPageName.FOLLOW) {
           res = await services[page]({})
         } else {
           res = await services[type || EPersonalHomeTab.POST]({ id })

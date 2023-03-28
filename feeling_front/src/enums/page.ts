@@ -23,6 +23,12 @@ export enum EPageName {
   NOT_FOUND = '未找到'
 }
 
+// Home页面内tabs
+export enum EHomeTab {
+  FOLLOW = 'follow',
+  RECOMMEND = 'recommend'
+}
+
 // follow页面内tabs
 export enum EFollowTab {
   FOLLOW = 'follow',
