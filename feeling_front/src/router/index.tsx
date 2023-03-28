@@ -47,10 +47,6 @@ export const routes: RouteObject[] = [
         element: lazyElement(lazy(() => import('@/pages/Notify')))
       },
       {
-        path: EPagePath.MESSAGE,
-        element: lazyElement(lazy(() => import('@/pages/Message')))
-      },
-      {
         path: EPagePath.PERSONAL_HOME,
         element: lazyElement(lazy(() => import('@/pages/PersonalHome')))
       },
@@ -61,10 +57,6 @@ export const routes: RouteObject[] = [
       {
         path: EPagePath.Follow,
         element: lazyElement(lazy(() => import('@/pages/Follow')))
-      },
-      {
-        path: EPagePath.MESSAGE_DETAIL,
-        element: lazyElement(lazy(() => import('@/pages/MsgDetail')))
       },
       {
         path: EPagePath.DETAIL,

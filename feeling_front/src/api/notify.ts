@@ -1,4 +1,3 @@
-import { ENotifyApi } from '@/enums/api'
 import {
   IDeleteNotify,
   IGetNotify,
@@ -15,10 +14,7 @@ import { getStringifyObj } from '@/utils/qs'
  */
 export async function getNotifyItem({ next = '', limit = 10 }: IGetNotify) {
   const res = await request.httpGet<IResp<IResINotifyItem>>(
-    ENotifyApi.Prefix +
-      ENotifyApi.Get +
-      '?' +
-      getStringifyObj({ next, limit: String(limit) })
+    '/notice/get?' + getStringifyObj({ next, limit: String(limit) })
   )
   return res
 }
@@ -28,10 +24,7 @@ export async function getNotifyItem({ next = '', limit = 10 }: IGetNotify) {
  * @returns
  */
 export async function updataNotifyStatus({ id = '' }: IUpdateNotifyStatus) {
-  const res = await request.httpPost<IResp>(
-    ENotifyApi.Prefix + ENotifyApi.UpdateStatus,
-    { id }
-  )
+  const res = await request.httpPost<IResp>('/notice/update_status', { id })
   return res
 }
 /**
@@ -40,10 +33,9 @@ export async function updataNotifyStatus({ id = '' }: IUpdateNotifyStatus) {
  * @returns
  */
 export async function deleteNotify({ id = '' }: IDeleteNotify) {
-  const res = await request.httpPost<IResp>(
-    ENotifyApi.Prefix + ENotifyApi.Delete,
-    { id }
-  )
+  const res = await request.httpPost<IResp>('/notice/delete', {
+    id
+  })
   return res
 }
 /**
@@ -51,9 +43,7 @@ export async function deleteNotify({ id = '' }: IDeleteNotify) {
  * @returns
  */
 export async function getHasUnread() {
-  const res = await request.httpGet<IResp<IUnReadNotify>>(
-    ENotifyApi.Prefix + ENotifyApi.GetHasUnread
-  )
+  const res = await request.httpGet<IResp<IUnReadNotify>>('/notice/unread')
   return res
 }
 /**
@@ -61,12 +51,13 @@ export async function getHasUnread() {
  * @returns
  */
 export async function setAllNotifyToRead() {
-  return request.httpPost<IResp>(
-    ENotifyApi.Prefix + ENotifyApi.setAllNotifyToRead
-  )
+  return request.httpPost<IResp>('/notice/read_all')
 }
+
+/**
+ * @description 将所有通知删除
+ * @returns
+ */
 export async function setAllNotifyToDelete() {
-  return request.httpPost<IResp>(
-    ENotifyApi.Prefix + ENotifyApi.setAllNotifyToDelete
-  )
+  return request.httpPost<IResp>('/notice/delete_all')
 }

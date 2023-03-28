@@ -19,6 +19,7 @@ export function usePosts(page: EPageName, type?: EPersonalHomeTab) {
   const services = useMemo(
     () => ({
       [EPageName.HOME]: (params: IPagination) => getHomePosts(params),
+      [EPageName.FOLLOW]: (params: IPagination) => getHomePosts(params),
       [EPersonalHomeTab.POST]: (params: IGetPost) => getUserHomePosts(params),
       [EPersonalHomeTab.IMAGE_POST]: (params: IGetImgPost) =>
         getUserHomeImgPosts(params),

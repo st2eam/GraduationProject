@@ -50,7 +50,7 @@ def delete():
 # =====================================
 # @description 获取未读通知条数
 # =====================================
-@bp.route('/get_unread', methods=["GET"])
+@bp.route('/unread', methods=["GET"])
 def get_unread():
     res = notice_service.get_unread(request.cookies['token'])
     return jsonify(ApiResp(data=res))

@@ -1,6 +1,5 @@
 import * as request from '@/utils/http/axios'
 import { IResp } from '@/interfaces/response'
-import { EPostApi } from '@/enums/api'
 import {
   ICommentResp,
   IPostItem,
@@ -16,10 +15,19 @@ import { getStringifyObj } from '@/utils/qs'
  */
 export async function getHomePosts({ next = '', limit = 10 }: IPagination) {
   const res = await request.httpGet<IResp<IPostItemResp>>(
-    EPostApi.Prefix +
-      EPostApi.GetRecommend +
-      '?' +
-      getStringifyObj({ next, limit: String(limit) })
+    '/post/recommend?' + getStringifyObj({ next, limit: String(limit) })
+  )
+  return res
+}
+
+/**
+ * @description 获取关注列表文章
+ * @param { next = '', limit = 10 }: IPagination
+ * @returns IResp<IPostItemResp[]>
+ */
+export async function getFollowPosts({ next = '', limit = 10 }: IPagination) {
+  const res = await request.httpGet<IResp<IPostItemResp>>(
+    '/post/following?' + getStringifyObj({ next, limit: String(limit) })
   )
   return res
 }
@@ -31,7 +39,7 @@ export async function getHomePosts({ next = '', limit = 10 }: IPagination) {
  */
 export async function getPostDetail({ _id }: { _id: string }) {
   const res = await request.httpGet<IResp<IPostItem>>(
-    EPostApi.Prefix + EPostApi.GetDetail + '?' + getStringifyObj({ _id })
+    '/post/get_detail?' + getStringifyObj({ _id })
   )
   return res
 }
@@ -47,10 +55,7 @@ export async function getComments({
   limit = 10
 }: IGetComment) {
   const res = await request.httpGet<IResp<ICommentResp>>(
-    EPostApi.Prefix +
-      EPostApi.GetComments +
-      '?' +
-      getStringifyObj({ _id, next, limit: String(limit) })
+    '/post/get_comments?' + getStringifyObj({ _id, next, limit: String(limit) })
   )
   return res
 }
@@ -62,10 +67,10 @@ export async function getComments({
  * @returns IResp
  */
 export async function createPost({ content, imgs }: ICreate) {
-  const res = await request.httpPost<IResp>(
-    EPostApi.Prefix + EPostApi.CreatePost,
-    { content, imgs }
-  )
+  const res = await request.httpPost<IResp>('/post/create_post', {
+    content,
+    imgs
+  })
   return res
 }
 
@@ -77,10 +82,11 @@ export async function createPost({ content, imgs }: ICreate) {
  * @returns IResp
  */
 export async function createComment({ relationId, content, imgs }: ICreate) {
-  const res = await request.httpPost<IResp>(
-    EPostApi.Prefix + EPostApi.CreateComment,
-    { relationId, content, imgs }
-  )
+  const res = await request.httpPost<IResp>('/post/create_comment', {
+    relationId,
+    content,
+    imgs
+  })
   return res
 }
 
@@ -92,10 +98,11 @@ export async function createComment({ relationId, content, imgs }: ICreate) {
  * @returns IResp
  */
 export async function createForward({ relationId, content, imgs }: ICreate) {
-  const res = await request.httpPost<IResp>(
-    EPostApi.Prefix + EPostApi.CreateForward,
-    { relationId, content, imgs }
-  )
+  const res = await request.httpPost<IResp>('/post/create_forward', {
+    relationId,
+    content,
+    imgs
+  })
   return res
 }
 
@@ -105,7 +112,7 @@ export async function createForward({ relationId, content, imgs }: ICreate) {
  * @returns IResp
  */
 export async function deletePost({ _id }: { _id: string }) {
-  const res = await request.httpPost<IResp>(EPostApi.Prefix + EPostApi.Delete, {
+  const res = await request.httpPost<IResp>('/post/delete', {
     id: _id
   })
   return res
@@ -117,7 +124,7 @@ export async function deletePost({ _id }: { _id: string }) {
  * @returns IResp
  */
 export async function likePost({ _id }: { _id: string }) {
-  const res = await request.httpPost<IResp>(EPostApi.Prefix + EPostApi.Like, {
+  const res = await request.httpPost<IResp>('/post/like', {
     id: _id
   })
   return res
@@ -129,7 +136,7 @@ export async function likePost({ _id }: { _id: string }) {
  * @returns IResp
  */
 export async function unLikePost({ _id }: { _id: string }) {
-  const res = await request.httpPost<IResp>(EPostApi.Prefix + EPostApi.Unlike, {
+  const res = await request.httpPost<IResp>('/post/unlike', {
     id: _id
   })
   return res

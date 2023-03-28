@@ -28,6 +28,26 @@ def recommend():
 
 
 # =====================================
+# @description 获取关注列表文章
+# =====================================
+@bp.route('/following', methods=["GET"])
+def following():
+    props = Schema({
+        Optional('prev'): str,
+        Optional('next'): str,
+        Optional('limit'): Use(int)
+    }).validate(dict(request.args))
+    res = post_service.get_following(
+        request.cookies['token'],
+        IPagination(
+            prev=props.get('prev'),
+            next=props.get('next'),
+            limit=props.get('limit', 10)
+        ))
+    return jsonify(ApiResp(data=res))
+
+
+# =====================================
 # @description 个人中心帖子列表
 # =====================================
 @bp.route('/get_user_post', methods=["GET"])

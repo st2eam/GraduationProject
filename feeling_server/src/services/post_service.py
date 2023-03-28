@@ -1,4 +1,3 @@
-import random
 import re
 import time
 import jieba
@@ -190,19 +189,97 @@ def get_recommend(token: str, options: IPagination):
     hasNext = False
     if options.next:
         next_index = None
-        for i, item in enumerate(sorted_arr):
+        for i, item in enumerate(recommend_arr):
             if str(item['_id']) == options.next:
                 next_index = i + 1
                 break
         if next_index is None:
             items = []
         else:
-            items = sorted_arr[next_index:next_index+options.limit]
+            items = recommend_arr[next_index:next_index+options.limit]
     else:
-        items = sorted_arr[:options.limit]
+        items = recommend_arr[:options.limit]
     hasNext = len(items) == options.limit
     return {
         'items': items,
+        'hasNext': hasNext
+    }
+
+
+def get_following(token: str, options: IPagination):
+    userId = session_service.getSessionBySid(token)['userId']
+    hasNext = False
+    option = [
+        *filterDeleted,
+        *userInfo,
+        *relatInfo,
+        {
+            '$lookup': {
+                'from': 'follows',
+                'localField': 'userId',
+                'foreignField': 'followId',
+                'as': 'follow'
+            }
+        },
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'hasLikes'
+            }
+        },
+        {
+            '$addFields': {
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
+            }
+        },
+        {
+            '$project': {
+                'hasLikes': 0
+            }
+        },
+        {
+            '$match': {
+                '$or': [{'userId': userId}, {'follow.userId': userId}]
+            }
+        },
+        {'$match': {'type': {'$ne': EPostType.Comment.value}}},
+        {
+            '$sort': {
+                '_id': -1
+            }
+        },
+        {
+            '$project': {
+                'follow': 0
+            }
+        }
+    ]
+    if bool(options.next):
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {
+                '$match': {
+                    '_id': {
+                        '$lt': ObjectId(options.next)
+                    }
+                }
+            },
+            {
+                '$limit': options.limit
+            }
+        ])
+    else:
+        data_cursor = get_collection('posts').aggregate([
+            *option, {
+                '$limit': options.limit
+            }
+        ])
+    arr = [x for x in data_cursor]
+    hasNext = len(arr) == options.limit
+    return {
+        'items': arr,
         'hasNext': hasNext
     }
 
@@ -644,11 +721,10 @@ def get_user_like_post(token: str, relationId: str, options: IPagination):
 
 
 def create_daily_posts(data: list[str]):
-    user_array = ["老王", "小李", "Caphriel",
-                  "Rahmiel", "Naaririel", "Ophanim", "Yahoel", "Wish"]
-    for content in data:
-        now_index = user_array.index(random.choice(user_array))
-        userId = user_array[now_index+1]
+    user_array = ["老王",  "Caphriel",
+                  "Rahmiel", "Naaririel", "小李", "Ophanim", "Yahoel", "Wish"]
+    for i, content in enumerate(data):
+        userId = user_array[i % len(user_array)]
         result_Classify = TextClassifier_MAIN.predict([content])[0]
         result_NER = NER_MAIN.pos_predict([content])[0]["label"]
         doc = " ".join(jieba.cut(content))
