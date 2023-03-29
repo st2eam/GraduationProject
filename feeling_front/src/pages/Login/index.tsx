@@ -3,10 +3,13 @@ import { ILogin } from '@/interfaces/request/auth'
 import { Button, Form, Input } from 'antd-mobile'
 import styles from './style.module.scss'
 import { checkUserId } from '@/utils/validate/checkUserId'
+import { useNavigate } from 'react-router-dom'
+import { EPagePath } from '@/enums/page'
 function Login() {
   const [form] = Form.useForm<ILogin>()
   const { handleLogin } = useAuth()
-  const confirmRegister = async () => {
+  const navigator = useNavigate()
+  const confirmLogin = async () => {
     const values = form.getFieldsValue()
     const { username, password } = values
     try {
@@ -20,12 +23,33 @@ function Login() {
   }
 
   return (
-    <div className={styles.loginWrapper}>
+    <div className={styles.contentFull}>
       <Form
         form={form}
         mode="card"
+        className={styles.form}
         layout="horizontal"
         requiredMarkStyle="none"
+        footer={
+          <div className={styles.btnContainer}>
+            <Button
+              block
+              onClick={() => {
+                navigator(EPagePath.REGISTER)
+              }}
+            >
+              <div className={styles.registerText}>没有帐号</div>
+            </Button>
+            <Button
+              className={styles.loginBtn}
+              color="primary"
+              block
+              onClick={confirmLogin}
+            >
+              <div className={styles.loginText}>登录</div>
+            </Button>
+          </div>
+        }
       >
         <Form.Item
           name="username"
@@ -45,9 +69,6 @@ function Login() {
           <Input placeholder="请输入密码" className={styles.emailInput} />
         </Form.Item>
       </Form>
-      <Button className={styles.registerBtn} block onClick={confirmRegister}>
-        <div className={styles.registerText}>登录</div>
-      </Button>
     </div>
   )
 }

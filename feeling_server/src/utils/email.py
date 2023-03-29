@@ -16,6 +16,8 @@ def sendEmail(sender: str, msg: str, receivers: str):
 
     message = MIMEMultipart('related')
     message['From'] = Header("Feeling", 'utf-8')
+    message.add_header('From', "Feeling <{sender}>".replace(
+        "{sender}", sender))
     message['To'] = Header(receivers, 'utf-8')
 
     subject = '[Feeling] 邮件注册验证码'

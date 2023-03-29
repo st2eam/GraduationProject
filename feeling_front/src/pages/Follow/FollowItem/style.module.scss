@@ -22,9 +22,10 @@
     .userId {
       @include text-2xl();
       font-weight: 600;
+      margin-right: 10px;
     }
-    .userId {
-      @include text-lg();
+    .email {
+      @include text-base();
       color: $text-info-color;
     }
     .userFollowInfo {
@@ -49,7 +50,6 @@
     }
   }
   .bottom {
-    margin-top: 10px;
     @include text-lg();
   }
 }

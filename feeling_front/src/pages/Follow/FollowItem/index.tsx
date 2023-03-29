@@ -42,9 +42,10 @@ function FollowItem({
         {/* item right 顶部部分 */}
         <div className={styles.top}>
           {/* 用户名称和id */}
-          <div className={styles.userId}>
-            <div className={styles.userId}>{user.userId}</div>
-            <div className={styles.userId}>{user.email}</div>
+          <div>
+            <span className={styles.userId}>{user.userId}</span>
+            <span className={styles.email}>{user.email}</span>
+            <div className={styles.bottom}>{user.bio}</div>
             {/* 是否存在两个数据 */}
             {user.subscribeCounts || user?.subscribeCounts === 0 ? (
               <div className={styles.userFollowInfo}>
@@ -75,7 +76,6 @@ function FollowItem({
           )}
         </div>
         {/* item right 底部部分 */}
-        <div className={styles.bottom}>{user.bio}</div>
       </div>
     </div>
   )
