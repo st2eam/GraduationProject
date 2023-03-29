@@ -13,6 +13,7 @@ export type IGetFollowPosts = IGetUserPosts
 export interface ICreate {
   content: string
   imgs: string[]
+  labels: string[]
   relationId?: string // post_id ObjectId
 }
 

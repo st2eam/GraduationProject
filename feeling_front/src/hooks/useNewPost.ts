@@ -8,6 +8,7 @@ import { ICreate } from './../interfaces/request/post'
 import { EPostType } from './../enums/model'
 
 const useNewPost = () => {
+  const [labels, setLabels] = useState<Array<string>>([])
   const [fileList, setFileList] = useState<ImageUploadItem[]>([])
   const { setNewPost } = useContext(newPostContext)
   const [form] = Form.useForm()
@@ -30,18 +31,21 @@ const useNewPost = () => {
         const url = await getImageUploadedURL({ image: item.extra.file })
         urlList.push(String(url))
       }
-      services[type]({ content, imgs: urlList, relationId }).then((res) => {
-        if ((res.message = 'ok')) {
-          Toast.show({
-            icon: 'success',
-            content: '发布成功'
-          })
-          sessionStorage.setItem('newImgList', JSON.stringify(fileList))
-          setFileList([])
-          form.resetFields()
-          setNewPost(String(res.data))
+      services[type]({ content, imgs: urlList, relationId, labels }).then(
+        (res) => {
+          if ((res.message = 'ok')) {
+            Toast.show({
+              icon: 'success',
+              content: '发布成功'
+            })
+            sessionStorage.setItem('newImgList', JSON.stringify(fileList))
+            setFileList([])
+            setLabels([])
+            form.resetFields()
+            setNewPost(String(res.data))
+          }
         }
-      })
+      )
       return true
     } catch (err) {}
   }
@@ -90,6 +94,8 @@ const useNewPost = () => {
   return {
     form,
     fileList,
+    labels,
+    setLabels,
     publishNewPost,
     handleImageClick,
     handleImgsChange,

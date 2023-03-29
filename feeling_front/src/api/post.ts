@@ -66,9 +66,10 @@ export async function getComments({
  * @param imgs
  * @returns IResp
  */
-export async function createPost({ content, imgs }: ICreate) {
+export async function createPost({ content, imgs, labels }: ICreate) {
   const res = await request.httpPost<IResp>('/post/create_post', {
     content,
+    labels,
     imgs
   })
   return res

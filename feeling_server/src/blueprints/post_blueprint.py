@@ -121,11 +121,11 @@ def create_post():
     data = Schema({
         'content': str,
         'imgs': [str],
-        Optional('label'): [str]
+        Optional('labels'): [str]
     }).validate(request.json)
     token = request.cookies.get('token')
     res = post_service.create_post(
-        token=token, content=data['content'], imgs=data['imgs'], label=data.get('label'))
+        token=token, content=data['content'], imgs=data['imgs'], labels=data.get('labels'))
     return jsonify(ApiResp(data=res))
 
 

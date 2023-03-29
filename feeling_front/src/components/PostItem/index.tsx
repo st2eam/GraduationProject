@@ -145,6 +145,15 @@ const PostItem = (props: IProps) => {
             />
           )}
         </Content>
+        <div>
+          {'customize' in post.label
+            ? post.label.customize?.map((item) => (
+                <span key={item} className={styles.keyword}>
+                  # {item}
+                </span>
+              ))
+            : null}
+        </div>
         <div className={styles.postItemFooter}>
           <span className={styles.footerItem} onClick={(e) => commentPost(e)}>
             <MessageOutline className={styles.FooterIcon} />

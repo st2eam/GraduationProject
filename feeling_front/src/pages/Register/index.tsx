@@ -34,7 +34,7 @@ function Register() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [visible, setVisible] = useState(false)
-
+  const [current, setCurrent] = useState(0)
   const navigator = useNavigate()
   const { handleRegister, handleLogin, getSecurityCode, validate_info } =
     useAuth()
@@ -137,7 +137,7 @@ function Register() {
         </div>
       }
     >
-      <Steps current={1}>
+      <Steps current={current}>
         <Step title="ACCOUNT SETUP" />
         <Step title="EMAIL VALIDATE" />
         <Step title="PERSONAL DETAILS" />

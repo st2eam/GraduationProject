@@ -10,9 +10,11 @@ import Content from '../PostItem/Content'
 import {
   Avatar,
   Button,
+  Dialog,
   Divider,
   Form,
   Image,
+  Input,
   Popup,
   TextArea
 } from 'antd-mobile'
@@ -29,11 +31,15 @@ interface IProps {
 
 const NewPostPopup = (props: IProps) => {
   const [content, setContent] = useState('')
+  const [dialog_visible, setDialogVisible] = useState(false)
+  const [label, setLabel] = useState('')
   const { type, post, visible, setVisible } = props
   const { user } = useUserInfo()
   const {
     form,
     fileList,
+    labels,
+    setLabels,
     publishNewPost,
     handleImageClick,
     handleImgsChange,
@@ -58,6 +64,11 @@ const NewPostPopup = (props: IProps) => {
   const onTextAreaChange = (value: string) => {
     setContent(value)
   }
+
+  const deleteLabel = (index: number) => {
+    setLabels(labels.filter((_, i) => i !== index))
+  }
+
   return (
     <Popup visible={visible} bodyStyle={{ height: '100vh' }}>
       <div className={styles.popup}>
@@ -127,6 +138,59 @@ const NewPostPopup = (props: IProps) => {
                 />
               </Form.Item>
             </Form>
+            {type === EPostType.Post && (
+              <>
+                {labels.map((item, index) => {
+                  return (
+                    <span key={item} className={styles.keyword}>
+                      <CloseOutline
+                        className={styles.delete}
+                        onClick={() => deleteLabel(index)}
+                      />
+                      # {item}
+                    </span>
+                  )
+                })}
+                <Button
+                  className={styles.add}
+                  size="mini"
+                  onClick={() => setDialogVisible(true)}
+                >
+                  # 添加标签
+                </Button>
+                <Dialog
+                  visible={dialog_visible}
+                  header={'请输入要添加的标签(一次仅限添加一个)'}
+                  content={
+                    <div>
+                      <span>#</span>
+                      <Input autoFocus value={label} onChange={setLabel} />
+                    </div>
+                  }
+                  closeOnAction
+                  onClose={() => {
+                    setDialogVisible(false)
+                  }}
+                  actions={[
+                    {
+                      key: 'confirm',
+                      text: '确认',
+                      onClick: () => {
+                        setLabels([...labels, label])
+                        setLabel('')
+                      }
+                    },
+                    {
+                      key: 'cencel',
+                      text: '取消',
+                      onClick: () => {
+                        setLabel('')
+                      }
+                    }
+                  ]}
+                />
+              </>
+            )}
             <div className={styles.imageList}>
               {fileList.map((item, index) => (
                 <div className={styles.imageContainer} key={index}>

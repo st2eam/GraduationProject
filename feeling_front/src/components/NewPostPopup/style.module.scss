@@ -141,3 +141,36 @@
   text-align: right;
   color: $text-info-color;
 }
+
+.add{
+  margin:4px;
+}
+
+.keyword{
+  position: relative;
+  width: auto;
+  margin:4px;
+  padding:5px 10px;
+  color: #0069ec;
+  background-color: rgba(120, 120, 120, 0.1);
+  border-radius: 4px;
+  .delete {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    padding: 2px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    :global(#CloseOutline-CloseOutline) {
+      stroke: #fff;
+      stroke-width: 4px;
+    }
+  }
+}
+

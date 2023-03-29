@@ -284,7 +284,7 @@ def get_following(token: str, options: IPagination):
     }
 
 
-def create_post(token: str, content: str, imgs: list[str], label: list[str]):
+def create_post(token: str, content: str, imgs: list[str], labels: list[str]):
     result_Classify = TextClassifier_MAIN.predict([content])[0]
     result_NER = NER_MAIN.pos_predict([content])[0]["label"]
     doc = " ".join(jieba.cut(content))
@@ -295,8 +295,8 @@ def create_post(token: str, content: str, imgs: list[str], label: list[str]):
         keywords.extend(result_NER[key])
     for item in extract_keywords:
         keywords.append(item[0])
-    if label:
-        result_NER.update({'customize': label})
+    if labels:
+        result_NER.update({'customize': labels})
     keywords = list(set(keywords))
     userId = session_service.getSessionBySid(token)['userId']
     post = {

@@ -207,3 +207,12 @@
 .heartAnimation:active + .dot::after {
   visibility: visible;
 }
+
+.keyword{
+  width: auto;
+  margin:4px;
+  padding:5px 10px;
+  color: #0069ec;
+  background-color: rgba(120, 120, 120, 0.1);
+  border-radius: 4px;
+}
