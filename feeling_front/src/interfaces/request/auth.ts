@@ -9,6 +9,11 @@ export interface IEmail {
   email: string
 }
 
+export interface IValidate {
+  type: string
+  info: string
+}
+
 export interface IRegister {
   userId: string
   password: string

@@ -1,0 +1,63 @@
+
+.contentFull{
+  height: 100vh;
+  display: flex;
+  background-color: #3291ff;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.form{
+  :global(.adm-list-card) {
+    margin:0
+  }
+  :global(.adm-list-item-content){
+    border-top: none;
+  }
+}
+
+.progress {
+  position: absolute;
+  background: #0069ec;
+  height: 100vh;
+  width: 0;
+  transition: width 0.2s ease-in-out;
+}
+
+.inputContainer{
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -5px rgba(0,0,0,0.3);
+  transition: transform .1s ease-in-out;
+}
+
+.customIndicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px 8px;
+  color: #ffffff;
+  border-radius: 4px;
+  user-select: none;
+}
+
+.eye {
+  flex: none;
+  margin-left: 8px;
+  padding: 4px;
+  cursor: pointer;
+  svg {
+    display: block;
+    font-size: var(--adm-font-size-7);
+  }
+}
+
+.choose_avatar{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

@@ -7,7 +7,12 @@ export function check(res: IResp) {
 }
 
 export function checkWithData(res: IResp) {
-  if (res.message === 'ok' && res.status === 200 && res.data) {
-    return true
-  } else return false
+  if (res.message === 'ok' && res.status === 200) {
+    if (typeof res.data === 'boolean') {
+      return true
+    } else if (res.data) {
+      return true
+    }
+  }
+  return false
 }

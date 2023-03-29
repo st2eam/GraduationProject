@@ -138,3 +138,11 @@ def delLabels(token: str, newLabels: list[str]):
     res = get_collection('users').update_one(
         {"_id": user["_id"]}, {'$set': {'labels': labels}})
     return res.acknowledged
+
+
+# =====================================
+# @description 验证用户是否存在
+# =====================================
+def validate(type: str, info: str):
+    user = get_collection('users').find_one({type: info})
+    return bool(user)

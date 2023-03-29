@@ -89,3 +89,17 @@ def email():
         return response
     sendEmail(os.getenv('EMAIL_USERNAME'), num, user_email)
     return jsonify(ApiResp(data=num, status=200, message="ok"))
+
+
+# =====================================
+# @description 验证信息
+# =====================================
+@bp.route('/validate', methods=["POST"])
+def validate():
+    data = Schema({
+        'type': Or('email', 'userId'),
+        'info': str,
+    }).validate(request.json)
+    result = user_service.validate(
+        type=data['type'], info=data['info'])
+    return jsonify(ApiResp(data=result))

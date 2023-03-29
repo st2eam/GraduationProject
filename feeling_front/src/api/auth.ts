@@ -1,4 +1,4 @@
-import { IRegister, ILogin, IEmail } from '@/interfaces/request/auth'
+import { IRegister, ILogin, IEmail, IValidate } from '@/interfaces/request/auth'
 import { IResp } from '@/interfaces/response'
 import { ILoginResp, IRegisterResp } from '@/interfaces/response/user'
 import * as request from '@/utils/axios'
@@ -18,6 +18,12 @@ export async function logout() {
   return request.httpGet<IResp<ILoginResp>>('/auth/logout')
 }
 
+// 验证码
 export async function security_code(body: IEmail) {
   return request.httpPost<IResp<string>>('/auth/email', body)
+}
+
+// 验证信息
+export async function validate(body: IValidate) {
+  return request.httpPost<IResp<boolean>>('/auth/validate', body)
 }

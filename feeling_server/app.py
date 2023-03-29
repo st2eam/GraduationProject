@@ -30,7 +30,7 @@ app = create_app()
 
 @app.before_request
 def before_request():
-    authWhiteList = ['/api/auth/login',
+    authWhiteList = ['/api/auth/login', '/api/auth/validate',
                      '/api/auth/register', '/api/auth/email']
     if request.path not in authWhiteList:
         validate_token(request.cookies.get('token'))
