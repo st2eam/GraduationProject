@@ -1,14 +1,14 @@
 import { useAuth } from '@/hooks/useAuth'
 import {
   Avatar,
-  Button,
   Radio,
   Form,
   Input,
   SpinLoading,
   Modal,
   Selector,
-  Steps
+  Steps,
+  Swiper
 } from 'antd-mobile'
 import {
   CheckOutline,
@@ -35,6 +35,7 @@ function Register() {
   const [confirm, setConfirm] = useState('')
   const [visible, setVisible] = useState(false)
   const [current, setCurrent] = useState(0)
+  const [animate, setAnimate] = useState(false)
   const navigator = useNavigate()
   const { handleRegister, handleLogin, getSecurityCode, validate_info } =
     useAuth()
@@ -116,179 +117,223 @@ function Register() {
   }
 
   return (
-    <Form
-      form={form}
-      mode="card"
-      layout="horizontal"
-      requiredMarkStyle="none"
-      footer={
-        <div className={styles.btnContainer}>
-          <Button block color="primary" onClick={confirmRegister}>
-            <div className={styles.registerText}>注册</div>
-          </Button>
-          <div
-            className={styles.registerText}
-            onClick={() => {
-              navigator(EPagePath.LOGIN)
-            }}
-          >
-            已有帐号,直接登录
+    <Form form={form} mode="card" layout="horizontal" requiredMarkStyle="none">
+      <div className={styles.register}>
+        <div className={styles.form}>
+          <Steps current={current}>
+            <Step title="ACCOUNT SETUP" />
+            <Step title="EMAIL VALIDATE" />
+            <Step title="PASSWORD" />
+            <Step title="PERSONAL DETAILS" />
+          </Steps>
+          <Swiper onIndexChange={setCurrent} indicator={() => null}>
+            <Swiper.Item className={styles.swiper_item}>
+              <Form.Item
+                name="userId"
+                label="用户名"
+                className={styles.inputContainer}
+                rules={[{ validator: checkUserId }]}
+                extra={
+                  loading ? (
+                    <SpinLoading color="primary" style={{ '--size': '16px' }} />
+                  ) : data ? (
+                    <CheckOutline
+                      color="var(--adm-color-success)"
+                      fontSize={16}
+                    />
+                  ) : (
+                    <CloseOutline
+                      color="var(--adm-color-danger)"
+                      fontSize={16}
+                    />
+                  )
+                }
+              >
+                <Input
+                  placeholder="请输入用户名"
+                  className={styles.input}
+                  value={userId}
+                  onChange={(value) => handleUserIdInput(value)}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="sex"
+                className={styles.inputContainer}
+                label="性别"
+                required
+                initialValue={1}
+              >
+                <Radio.Group>
+                  <Radio value={1}>男</Radio>
+                  <Radio value={2}>女</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Swiper.Item>
+
+            <Swiper.Item className={styles.swiper_item}>
+              <div className={styles.inputContainer}>
+                <Form.Item
+                  name="email"
+                  label="邮箱"
+                  rules={[
+                    { required: true },
+                    { type: 'email', warningOnly: true }
+                  ]}
+                  extra={
+                    loading_email ? (
+                      <SpinLoading
+                        color="primary"
+                        style={{ '--size': '16px' }}
+                      />
+                    ) : data_email ? (
+                      <CheckOutline
+                        color="var(--adm-color-success)"
+                        fontSize={16}
+                      />
+                    ) : (
+                      <CloseOutline
+                        color="var(--adm-color-danger)"
+                        fontSize={16}
+                      />
+                    )
+                  }
+                >
+                  <Input
+                    placeholder="请输入邮箱"
+                    className={styles.input}
+                    value={email}
+                    onChange={handleEmailInput}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="security_code"
+                  label="验证码"
+                  extra={
+                    <span
+                      className={styles.security_code}
+                      onClick={handleSendCode}
+                    >
+                      发送验证码
+                    </span>
+                  }
+                  rules={[{ validator: checkCode }]}
+                >
+                  <Input placeholder="请输入" className={styles.input} />
+                </Form.Item>
+              </div>
+            </Swiper.Item>
+
+            <Swiper.Item className={styles.swiper_item}>
+              <div className={styles.inputContainer}>
+                <Form.Item
+                  name="password"
+                  label="密码"
+                  rules={[{ required: true }, { type: 'string', min: 6 }]}
+                  extra={
+                    <div className={styles.eye}>
+                      {!visible ? (
+                        <EyeInvisibleOutline onClick={() => setVisible(true)} />
+                      ) : (
+                        <EyeOutline onClick={() => setVisible(false)} />
+                      )}
+                    </div>
+                  }
+                >
+                  <Input
+                    className={styles.input}
+                    placeholder="请输入密码"
+                    type={visible ? 'text' : 'password'}
+                    value={password}
+                    onChange={setPassword}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="confirm"
+                  label="确认密码"
+                  rules={[{ required: true }, { type: 'string', min: 6 }]}
+                  extra={
+                    flag ? (
+                      <CheckOutline
+                        color="var(--adm-color-success)"
+                        fontSize={16}
+                      />
+                    ) : (
+                      <CloseOutline
+                        color="var(--adm-color-danger)"
+                        fontSize={16}
+                      />
+                    )
+                  }
+                >
+                  <Input
+                    placeholder="请确认密码"
+                    className={styles.input}
+                    type={'password'}
+                    value={confirm}
+                    onChange={handleConfirmInput}
+                  />
+                </Form.Item>
+              </div>
+            </Swiper.Item>
+
+            <Swiper.Item className={styles.swiper_item}>
+              <div
+                className={styles.choose_avatar}
+                onClick={() => {
+                  Modal.show({
+                    closeOnAction: true,
+                    content: (
+                      <Selector
+                        defaultValue={[
+                          'https://fee1ing.oss-cn-hangzhou.aliyuncs.com/avatar/avatar1.svg'
+                        ]}
+                        style={{ '--padding': '0' }}
+                        options={options}
+                        onChange={(arr) => setSrc(arr[0])}
+                      />
+                    ),
+                    actions: [
+                      {
+                        key: 'confirm',
+                        text: '我选好了',
+                        primary: true
+                      }
+                    ]
+                  })
+                }}
+              >
+                <Avatar
+                  src={src}
+                  className={styles.avatar}
+                  style={{ '--size': '64px' }}
+                />
+                {src === '' ? <span>请选择头像</span> : null}
+              </div>
+            </Swiper.Item>
+          </Swiper>
+          <div className={styles.btnContainer}>
+            <button
+              className={`${styles.bubbly_button} ${
+                animate ? styles.animate : ''
+              }`}
+              onClick={() => {
+                confirmRegister()
+                setAnimate(true)
+              }}
+            >
+              注册
+            </button>
+            <span
+              className={styles.login}
+              onClick={() => {
+                navigator(EPagePath.LOGIN)
+              }}
+            >
+              已有帐号,直接登录
+            </span>
           </div>
         </div>
-      }
-    >
-      <Steps current={current}>
-        <Step title="ACCOUNT SETUP" />
-        <Step title="EMAIL VALIDATE" />
-        <Step title="PERSONAL DETAILS" />
-      </Steps>
-      <div
-        className={styles.choose_avatar}
-        onClick={() => {
-          Modal.show({
-            closeOnAction: true,
-            content: (
-              <Selector
-                defaultValue={[
-                  'https://fee1ing.oss-cn-hangzhou.aliyuncs.com/avatar/avatar1.svg'
-                ]}
-                style={{ '--padding': '0' }}
-                options={options}
-                onChange={(arr) => setSrc(arr[0])}
-              />
-            ),
-            actions: [
-              {
-                key: 'confirm',
-                text: '我选好了',
-                primary: true
-              }
-            ]
-          })
-        }}
-      >
-        <Avatar
-          src={src}
-          className={styles.avatar}
-          style={{ '--size': '64px' }}
-        />
-        {src === '' ? <span>请选择头像</span> : null}
-      </div>
-      <Form.Item
-        name="userId"
-        label="用户名"
-        className={styles.inputContainer}
-        rules={[{ validator: checkUserId }]}
-        extra={
-          loading ? (
-            <SpinLoading color="primary" style={{ '--size': '16px' }} />
-          ) : data ? (
-            <CheckOutline color="var(--adm-color-success)" fontSize={16} />
-          ) : (
-            <CloseOutline color="var(--adm-color-danger)" fontSize={16} />
-          )
-        }
-      >
-        <Input
-          placeholder="请输入用户名"
-          className={styles.input}
-          value={userId}
-          onChange={(value) => handleUserIdInput(value)}
-        />
-      </Form.Item>
-
-      <Form.Item
-        name="sex"
-        className={styles.inputContainer}
-        label="性别"
-        required
-        initialValue={1}
-      >
-        <Radio.Group>
-          <Radio value={1}>男</Radio>
-          <Radio value={2}>女</Radio>
-        </Radio.Group>
-      </Form.Item>
-
-      <div className={styles.inputContainer}>
-        <Form.Item
-          name="email"
-          label="邮箱"
-          rules={[{ required: true }, { type: 'email', warningOnly: true }]}
-          extra={
-            loading_email ? (
-              <SpinLoading color="primary" style={{ '--size': '16px' }} />
-            ) : data_email ? (
-              <CheckOutline color="var(--adm-color-success)" fontSize={16} />
-            ) : (
-              <CloseOutline color="var(--adm-color-danger)" fontSize={16} />
-            )
-          }
-        >
-          <Input
-            placeholder="请输入邮箱"
-            className={styles.input}
-            value={email}
-            onChange={handleEmailInput}
-          />
-        </Form.Item>
-        <Form.Item
-          name="security_code"
-          label="验证码"
-          extra={
-            <span className={styles.security_code} onClick={handleSendCode}>
-              发送验证码
-            </span>
-          }
-          rules={[{ validator: checkCode }]}
-        >
-          <Input placeholder="请输入" className={styles.input} />
-        </Form.Item>
-      </div>
-
-      <div className={styles.inputContainer}>
-        <Form.Item
-          name="password"
-          label="密码"
-          rules={[{ required: true }, { type: 'string', min: 6 }]}
-          extra={
-            <div className={styles.eye}>
-              {!visible ? (
-                <EyeInvisibleOutline onClick={() => setVisible(true)} />
-              ) : (
-                <EyeOutline onClick={() => setVisible(false)} />
-              )}
-            </div>
-          }
-        >
-          <Input
-            className={styles.input}
-            placeholder="请输入密码"
-            type={visible ? 'text' : 'password'}
-            value={password}
-            onChange={setPassword}
-          />
-        </Form.Item>
-        <Form.Item
-          name="confirm"
-          label="确认密码"
-          rules={[{ required: true }, { type: 'string', min: 6 }]}
-          extra={
-            flag ? (
-              <CheckOutline color="var(--adm-color-success)" fontSize={16} />
-            ) : (
-              <CloseOutline color="var(--adm-color-danger)" fontSize={16} />
-            )
-          }
-        >
-          <Input
-            placeholder="请确认密码"
-            className={styles.input}
-            type={'password'}
-            value={confirm}
-            onChange={handleConfirmInput}
-          />
-        </Form.Item>
       </div>
     </Form>
   )
