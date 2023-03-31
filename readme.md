@@ -15,6 +15,7 @@
 
 - axios
 - dayjs
+- ali-oss
 - [ahooks](https://github.com/alibaba/hooks) - React Hooks 库
 
 UI库：
@@ -26,8 +27,11 @@ UI库：
 
 主要技术栈：
 
+- ali-oss
 - Bert
 - Flask
+- gensim
+- keybert
 - PyMongo
 - Word2Vec
 
