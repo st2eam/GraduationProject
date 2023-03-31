@@ -1,6 +1,6 @@
 import { Avatar } from 'antd-mobile'
 const avatar_array = [
-  '',
+  'https://fee1ing.oss-cn-hangzhou.aliyuncs.com/avatar/avatar1.svg',
   'https://fee1ing.oss-cn-hangzhou.aliyuncs.com/avatar/avatar2.svg',
   'https://fee1ing.oss-cn-hangzhou.aliyuncs.com/avatar/avatar3.svg',
   'https://fee1ing.oss-cn-hangzhou.aliyuncs.com/avatar/avatar4.svg',
