@@ -11,7 +11,7 @@ from ..services import session_service, follow_service
 # =====================================
 # @description 注册
 # =====================================
-def register(userId: str, password: str, sex: ESexType, avatar: str, banner: str, email: str):
+def register(userId: str, password: str, sex: ESexType, avatar: str, banner: str, email: str, labels: list[str]):
     EmailAlreadyExists = get_collection('users').find_one({'email': email})
     UserAlreadyExists = get_collection(
         'users').find_one({'userId': userId})
@@ -25,7 +25,7 @@ def register(userId: str, password: str, sex: ESexType, avatar: str, banner: str
         'avatar': avatar,
         'banner': banner,
         'bio': '',
-        'labels': [],
+        'labels': labels,
         'createdAt': time.time() * 1000,
         'status': EUserStatus.Normal.value
     }

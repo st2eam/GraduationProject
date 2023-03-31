@@ -21,4 +21,5 @@ export interface IRegister {
   sex: ESexType
   banner: string
   avatar: string
+  labels: string[]
 }

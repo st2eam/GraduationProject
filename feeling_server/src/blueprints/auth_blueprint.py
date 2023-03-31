@@ -45,14 +45,16 @@ def register():
         'email': str,
         'sex': Or(ESexType.Female.value, ESexType.Male.value),
         "avatar": str,
-        "banner": str
+        "banner": str,
+        "labels": [str]
     }).validate(request.json)
     res = user_service.register(userId=data['userId'],
                                 password=data['password'],
                                 email=data['email'],
                                 sex=data['sex'],
                                 avatar=data['avatar'],
-                                banner=data['banner'])
+                                banner=data['banner'],
+                                labels=data['labels'])
     return jsonify(ApiResp(data=res, status=200, message="ok"))
 
 

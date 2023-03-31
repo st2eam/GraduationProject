@@ -8,7 +8,8 @@ import {
   Modal,
   Selector,
   Steps,
-  Swiper
+  Swiper,
+  Divider
 } from 'antd-mobile'
 import {
   CheckOutline,
@@ -36,6 +37,7 @@ function Register() {
   const [visible, setVisible] = useState(false)
   const [current, setCurrent] = useState(0)
   const [animate, setAnimate] = useState(false)
+  const [labels, setLabels] = useState<Array<string>>(['0'])
   const navigator = useNavigate()
   const { handleRegister, handleLogin, getSecurityCode, validate_info } =
     useAuth()
@@ -53,7 +55,8 @@ function Register() {
         email,
         sex,
         banner,
-        avatar: src
+        avatar: src,
+        labels: labels
       })
 
       if (registerRes) {
@@ -285,9 +288,7 @@ function Register() {
                     closeOnAction: true,
                     content: (
                       <Selector
-                        defaultValue={[
-                          'https://fee1ing.oss-cn-hangzhou.aliyuncs.com/avatar/avatar1.svg'
-                        ]}
+                        defaultValue={[src]}
                         style={{ '--padding': '0' }}
                         options={options}
                         onChange={(arr) => setSrc(arr[0])}
@@ -308,8 +309,40 @@ function Register() {
                   className={styles.avatar}
                   style={{ '--size': '64px' }}
                 />
-                {src === '' ? <span>请选择头像</span> : null}
+                <span className={styles.choose_text}>请选择头像</span>
               </div>
+              <Divider />
+              <span className={styles.choose_text}>
+                请选择感兴趣的项目（最少一项）
+              </span>
+              <Selector
+                columns={5}
+                options={[
+                  '财经',
+                  '房产',
+                  '股票',
+                  '教育',
+                  '科技',
+                  '社会',
+                  '时政',
+                  '体育',
+                  '游戏',
+                  '娱乐'
+                ].map((item, index) => {
+                  return {
+                    label: item,
+                    value: String(index)
+                  }
+                })}
+                defaultValue={labels}
+                value={labels}
+                multiple={true}
+                onChange={(v) => {
+                  if (v.length) {
+                    setLabels(v)
+                  }
+                }}
+              />
             </Swiper.Item>
           </Swiper>
           <div className={styles.btnContainer}>

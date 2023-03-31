@@ -7,8 +7,10 @@ import { useNavigate } from 'react-router-dom'
 import { EPagePath } from '@/enums/page'
 import styles from './style.module.scss'
 import logoTextUrl from '@/assets/images/logoText.png'
+import { useState } from 'react'
 function Login() {
   const [form] = Form.useForm<ILogin>()
+  const [animate, setAnimate] = useState(false)
   const { handleLogin } = useAuth()
   const navigator = useNavigate()
   const confirmLogin = async () => {
@@ -52,22 +54,25 @@ function Login() {
             </Form.Item>
           </div>
           <div className={styles.btnContainer}>
-            <Button
-              block
-              className={styles.bubbly_button}
-              color="primary"
-              onClick={confirmLogin}
+            <button
+              className={`${styles.bubbly_button} ${
+                animate ? styles.animate : ''
+              }`}
+              onClick={() => {
+                setAnimate(true)
+                confirmLogin()
+              }}
             >
               登录
-            </Button>
-            <div
+            </button>
+            <span
               className={styles.register}
               onClick={() => {
                 navigator(EPagePath.REGISTER)
               }}
             >
               没有帐号,先去注册
-            </div>
+            </span>
           </div>
         </div>
       </div>
