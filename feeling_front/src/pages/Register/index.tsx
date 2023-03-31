@@ -37,7 +37,7 @@ function Register() {
   const [visible, setVisible] = useState(false)
   const [current, setCurrent] = useState(0)
   const [animate, setAnimate] = useState(false)
-  const [labels, setLabels] = useState<Array<string>>(['0'])
+  const [labels, setLabels] = useState<Array<string>>(['财经'])
   const navigator = useNavigate()
   const { handleRegister, handleLogin, getSecurityCode, validate_info } =
     useAuth()
@@ -328,10 +328,10 @@ function Register() {
                   '体育',
                   '游戏',
                   '娱乐'
-                ].map((item, index) => {
+                ].map((item) => {
                   return {
                     label: item,
-                    value: String(index)
+                    value: item
                   }
                 })}
                 defaultValue={labels}
