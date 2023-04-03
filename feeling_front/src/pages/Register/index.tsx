@@ -62,7 +62,11 @@ function Register() {
     ) {
       ref.current?.swipeTo(1)
       return
-    } else if (password === undefined || confirm !== password) {
+    } else if (
+      password === undefined ||
+      password === '' ||
+      confirm !== password
+    ) {
       ref.current?.swipeTo(2)
       return
     }
