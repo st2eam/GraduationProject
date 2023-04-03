@@ -47,6 +47,7 @@ class ServiceError(Exception):
 
 
 class ELogType(Enum):
+    Read = auto()
     Post = auto()
     Comment = auto()
     Forward = auto()
@@ -55,8 +56,6 @@ class ELogType(Enum):
     DeleteForward = auto()
     Like = auto()
     Unlike = auto()
-    Follow = auto()
-    Unfollow = auto()
     Search = auto()
 
 

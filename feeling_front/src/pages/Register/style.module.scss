@@ -45,10 +45,23 @@ $button-bg: #ff0081;
 .login{
   @include text-base;
   color:$text-info-color;
+  cursor: pointer;
+}
+
+.security_code{
+  color:$primary-color;
+  cursor: pointer;
 }
 
 .choose_text{
   @include text-base;
+}
+
+.btnContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap:4px;
 }
 
 @keyframes topBubbles {

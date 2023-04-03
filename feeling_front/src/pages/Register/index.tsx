@@ -17,18 +17,18 @@ import {
   EyeInvisibleOutline,
   EyeOutline
 } from 'antd-mobile-icons'
+import { SwiperRef } from 'antd-mobile/es/components/swiper'
 import { checkUserId } from '@/utils/validate/checkUserId'
-import { IRegister } from '@/interfaces/request/auth'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import styles from './style.module.scss'
-import { useRequest } from 'ahooks'
+import { useRequest, useCountDown } from 'ahooks'
 import { options } from './options'
 import { useNavigate } from 'react-router-dom'
 import { EPagePath } from '@/enums/page'
 
 function Register() {
   const [src, setSrc] = useState('')
-  const [code, setCode] = useState('')
+  const [code, setCode] = useState('666666')
   const [flag, setFlag] = useState(false)
   const [email, setEmail] = useState('')
   const [userId, setUserId] = useState('')
@@ -38,14 +38,34 @@ function Register() {
   const [current, setCurrent] = useState(0)
   const [animate, setAnimate] = useState(false)
   const [labels, setLabels] = useState<Array<string>>(['财经'])
+  const [targetDate, setTargetDate] = useState<number>()
   const navigator = useNavigate()
   const { handleRegister, handleLogin, getSecurityCode, validate_info } =
     useAuth()
-  const [form] = Form.useForm<IRegister>()
+  const [form] = Form.useForm()
   const { Step } = Steps
+  const ref = useRef<SwiperRef>(null)
+  const [countdown] = useCountDown({
+    targetDate
+  })
   const confirmRegister = async () => {
     const values = form.getFieldsValue()
-    const { userId, password, email, sex, banner = '' } = values
+    const { userId, password, confirm, email, sex, security_code } = values
+    if (!data || sex === undefined) {
+      ref.current?.swipeTo(0)
+      return
+    } else if (
+      !/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(
+        email
+      ) ||
+      security_code !== code
+    ) {
+      ref.current?.swipeTo(1)
+      return
+    } else if (password === undefined || confirm !== password) {
+      ref.current?.swipeTo(2)
+      return
+    }
     try {
       // validate info
       await form.validateFields()
@@ -54,7 +74,7 @@ function Register() {
         password,
         email,
         sex,
-        banner,
+        banner: '',
         avatar: src,
         labels: labels
       })
@@ -81,6 +101,7 @@ function Register() {
   const handleSendCode = async () => {
     const values = form.getFieldsValue()
     const { email } = values
+    setTargetDate(Date.now() + 60000)
     const res = await getSecurityCode({ email: email })
     if (res) {
       setCode(res)
@@ -129,7 +150,7 @@ function Register() {
             <Step title="PASSWORD" />
             <Step title="PERSONAL DETAILS" />
           </Steps>
-          <Swiper onIndexChange={setCurrent} indicator={() => null}>
+          <Swiper onIndexChange={setCurrent} indicator={() => null} ref={ref}>
             <Swiper.Item className={styles.swiper_item}>
               <Form.Item
                 name="userId"
@@ -213,16 +234,27 @@ function Register() {
                   name="security_code"
                   label="验证码"
                   extra={
-                    <span
-                      className={styles.security_code}
-                      onClick={handleSendCode}
-                    >
-                      发送验证码
-                    </span>
+                    data_email ? (
+                      countdown === 0 ? (
+                        <span
+                          className={styles.security_code}
+                          onClick={handleSendCode}
+                        >
+                          发送验证码
+                        </span>
+                      ) : (
+                        <span>重新发送({Math.floor(countdown / 1000)}s)</span>
+                      )
+                    ) : null
                   }
                   rules={[{ validator: checkCode }]}
                 >
-                  <Input placeholder="请输入" className={styles.input} />
+                  <Input
+                    placeholder={
+                      data_email ? '请输入验证码' : '请先输入正确的邮箱'
+                    }
+                    className={styles.input}
+                  />
                 </Form.Item>
               </div>
             </Swiper.Item>
@@ -345,18 +377,50 @@ function Register() {
               />
             </Swiper.Item>
           </Swiper>
-          <div className={styles.btnContainer}>
-            <button
-              className={`${styles.bubbly_button} ${
-                animate ? styles.animate : ''
-              }`}
-              onClick={() => {
-                confirmRegister()
-                setAnimate(true)
-              }}
-            >
-              注册
-            </button>
+          <footer>
+            <div className={styles.btnContainer}>
+              {current >= 1 && current <= 2 && (
+                <button
+                  className={`${styles.bubbly_button} ${
+                    animate ? styles.animate : ''
+                  }`}
+                  onClick={() => {
+                    ref.current?.swipePrev()
+                    setCurrent((i) => i - 1)
+                    setAnimate(true)
+                  }}
+                >
+                  上一步
+                </button>
+              )}
+              {current < 3 && (
+                <button
+                  className={`${styles.bubbly_button} ${
+                    animate ? styles.animate : ''
+                  }`}
+                  onClick={() => {
+                    ref.current?.swipeNext()
+                    setCurrent((i) => i + 1)
+                    setAnimate(true)
+                  }}
+                >
+                  下一步
+                </button>
+              )}
+              {current === 3 && (
+                <button
+                  className={`${styles.bubbly_button} ${
+                    animate ? styles.animate : ''
+                  }`}
+                  onClick={() => {
+                    setAnimate(true)
+                    confirmRegister()
+                  }}
+                >
+                  注册
+                </button>
+              )}
+            </div>
             <span
               className={styles.login}
               onClick={() => {
@@ -365,7 +429,7 @@ function Register() {
             >
               已有帐号,直接登录
             </span>
-          </div>
+          </footer>
         </div>
       </div>
     </Form>

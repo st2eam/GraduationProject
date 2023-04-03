@@ -41,6 +41,7 @@ $button-bg: #1677ff;
 .register{
   @include text-base;
   color:$text-info-color;
+  cursor: pointer;
 }
 
 .logo{

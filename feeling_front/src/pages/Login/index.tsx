@@ -53,7 +53,7 @@ function Login() {
               <Input placeholder="请输入密码" className={styles.emailInput} />
             </Form.Item>
           </div>
-          <div className={styles.btnContainer}>
+          <div className={styles.footer}>
             <button
               className={`${styles.bubbly_button} ${
                 animate ? styles.animate : ''
