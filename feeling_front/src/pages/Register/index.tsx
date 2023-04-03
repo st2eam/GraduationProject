@@ -151,7 +151,7 @@ function Register() {
           <Steps current={current}>
             <Step title="ACCOUNT SETUP" />
             <Step title="EMAIL VALIDATE" />
-            <Step title="PASSWORD" />
+            <Step title="CONFIRM PASSWORD" />
             <Step title="PERSONAL DETAILS" />
           </Steps>
           <Swiper onIndexChange={setCurrent} indicator={() => null} ref={ref}>
