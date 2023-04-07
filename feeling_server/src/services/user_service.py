@@ -85,7 +85,8 @@ def validate_token(token: str):
 def get_user_info(token: str, otherUserId=''):
     currLoginUserId = session_service.getSessionBySid(token)['userId']
     userId = otherUserId if bool(otherUserId) else currLoginUserId
-    user = get_collection('users').find_one({'userId': userId})
+    user = get_collection('users').find_one(
+        {'userId': userId}, {'labels': 0, 'password': 0})
     check(bool(user), UserErrorStat.ERR_USER_NOT_FOUND.value)
     check(user['status'] == EUserStatus.Normal.value,
           UserErrorStat.ERR_USER_HAS_BEEN_BANNED.value)

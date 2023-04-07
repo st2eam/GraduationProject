@@ -89,6 +89,14 @@ def get_recommend(token: str, options: IPagination):
         },
         {
             '$lookup': {
+                'from': 'recommend',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'recommended'
+            }
+        },
+        {
+            '$lookup': {
                 'from': 'likes',
                 'localField': '_id',
                 'foreignField': 'postId',
@@ -101,15 +109,22 @@ def get_recommend(token: str, options: IPagination):
             }
         },
         {
+            '$addFields': {
+                'haveRecommended': {'$in': [userId, '$recommended.userId']},
+            }
+        },
+        {
             '$project': {
-                'hasLikes': 0
+                'hasLikes': 0,
+                'recommended': 0
             }
         },
         {
             '$match': {
                 '$and': [
                     {'userId': {'$not': {'$eq': userId}}},
-                    {'follow.userId': {'$not': {'$eq': userId}}}
+                    {'follow.userId': {'$not': {'$eq': userId}}},
+                    {'haveRecommended': {'$eq': False}}
                 ]
             }
         },
@@ -121,7 +136,9 @@ def get_recommend(token: str, options: IPagination):
         },
         {
             '$project': {
-                'follow': 0
+                'follow': 0,
+                'haveRecommended': 0,
+                'user.labels': 0
             }
         }
     ]
@@ -131,7 +148,6 @@ def get_recommend(token: str, options: IPagination):
     model = Word2VecModel.get_instance()
     recommend_arr = sorted(temp, key=lambda x: model.wv.n_similarity(
         x['keywords'], labels), reverse=True)
-
     items = []
     hasNext = False
     if options.next:
@@ -147,6 +163,9 @@ def get_recommend(token: str, options: IPagination):
     else:
         items = recommend_arr[:options.limit]
     hasNext = len(items) == options.limit
+    if (len(items) != 0):
+        log_service.addRecommendedPosts(
+            userId=userId, postList=map(lambda post: post['_id'], items))
     return {
         'items': items,
         'hasNext': hasNext
@@ -669,6 +688,90 @@ def get_user_like_post(token: str, relationId: str, options: IPagination):
     items = [x for x in data_cursor]
     hasNext = len(items) == options.limit
     return {'items': items, 'hasNext': hasNext}
+
+
+def similar(id: str, token: str):
+    post = get_collection('posts').find_one({'_id': ObjectId(id)})
+    userId = session_service.getSessionBySid(token)['userId']
+    check(post, PostErrorStat.ERR_POST_NOT_FOUND.value)
+    recommend_option = [
+        *filterDeleted,
+        *userInfo,
+        *relatInfo,
+        {
+            '$lookup': {
+                'from': 'follows',
+                'localField': 'userId',
+                'foreignField': 'followId',
+                'as': 'follow'
+            }
+        },
+        {
+            '$lookup': {
+                'from': 'recommend',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'recommended'
+            }
+        },
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'hasLikes'
+            }
+        },
+        {
+            '$addFields': {
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
+            }
+        },
+        {
+            '$addFields': {
+                'haveRecommended': {'$in': [userId, '$recommended.userId']},
+            }
+        },
+        {
+            '$project': {
+                'hasLikes': 0,
+                'recommended': 0
+            }
+        },
+        {
+            '$match': {
+                '$and': [
+                    {'_id': {'$not': {'$eq': ObjectId(id)}}},
+                    {'userId': {'$not': {'$eq': userId}}},
+                    {'follow.userId': {'$not': {'$eq': userId}}},
+                    {'haveRecommended': {'$eq': False}}
+                ]
+            }
+        },
+        {'$match': {'type': {'$ne': EPostType.Comment.value}}},
+        {
+            '$sort': {
+                '_id': -1
+            }
+        },
+        {
+            '$project': {
+                'follow': 0,
+                'haveRecommended': 0,
+                'user.labels': 0
+            }
+        }
+    ]
+    recommend_data_cursor = get_collection(
+        'posts').aggregate([*recommend_option])
+    temp = [x for x in recommend_data_cursor]
+    model = Word2VecModel.get_instance()
+    recommend_arr = sorted(temp, key=lambda x: model.wv.n_similarity(
+        x['keywords'], post['keywords']), reverse=True)
+    most_recommended = recommend_arr[0]
+    log_service.addRecommendedPosts(userId=userId, postList=[
+                                    most_recommended['_id']])
+    return most_recommended
 
 
 def create_daily_posts(data: list[str]):

@@ -257,9 +257,22 @@ def word2vec():
 # =====================================
 # @description update
 # =====================================
-@bp.route('/update', methods=["GET"])
+@bp.route('/update', methods=["POST"])
 def update():
     response = requests.get('https://api.vvhan.com/api/60s?type=json')
     result = response.json()
     post_service.create_daily_posts(result['data'])
     return jsonify(ApiResp(data=result))
+
+
+# =====================================
+# @description similar
+# =====================================
+@bp.route('/similar', methods=["GET"])
+def similar():
+    props = Schema({
+        '_id': str,
+    }).validate(dict(request.args))
+    token = request.cookies.get('token')
+    res = post_service.similar(id=props.get('_id'), token=token)
+    return jsonify(ApiResp(data=res))
