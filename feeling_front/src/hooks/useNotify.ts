@@ -85,7 +85,7 @@ export default function useNotify() {
       setError('')
       const res = await notifyServices.getHasUnread()
       if (checkWithData(res)) {
-        if (res.data?.unReadCount! > 0) {
+        if (res.data! > 0) {
           setHasUnread(true)
         } else {
           setHasUnread(false)

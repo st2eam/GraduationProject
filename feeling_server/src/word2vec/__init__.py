@@ -22,4 +22,4 @@ class Word2VecModel:
                 if cls._instance is None:
                     cls._instance = Word2Vec.load(
                         'src/word2vec/word2vec.model')
-                    print('Word2Vec model loaded successfully')
+                    print(' * Word2Vec model loaded successfully')

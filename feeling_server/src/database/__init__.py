@@ -8,9 +8,9 @@ def init_db():
         global client
         client = pymongo.MongoClient(
             "mongodb://localhost:27017/feeling_server")
-        print('connect db successfully')
+        print(' * Connect db successfully')
     except:
-        print("An exception occurred")
+        print(" * An exception occurred")
 
 
 def get_collection(collection_name: str):

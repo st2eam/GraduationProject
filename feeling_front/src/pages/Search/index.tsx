@@ -30,7 +30,7 @@ function Search() {
   const tabs: ITab[] = [
     { key: ESearchTab.POST, title: '贴子' },
     { key: ESearchTab.USER, title: '用户' },
-    { key: ESearchTab.IMAGE_POST, title: '照片' }
+    { key: ESearchTab.IMAGE_POST, title: '图片' }
   ]
   const {
     searchList,

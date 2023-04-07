@@ -145,14 +145,36 @@ const PostItem = (props: IProps) => {
             />
           )}
         </Content>
+        {post.type === EPostType.Post && (
+          <div>
+            {'customize' in post.label
+              ? post.label.customize?.map((item) => (
+                  <span key={item} className={styles.keyword}>
+                    # {item}
+                  </span>
+                ))
+              : null}
+          </div>
+        )}
+        <div
+          style={{
+            position: 'absolute',
+            right: '20px',
+            color: '#ff3141',
+            fontSize: '16px'
+          }}
+        >
+          {post.classify}
+        </div>
         <div>
-          {'customize' in post.label
-            ? post.label.customize?.map((item) => (
-                <span key={item} className={styles.keyword}>
-                  # {item}
-                </span>
-              ))
-            : null}
+          {post.keywords.map((i) => {
+            return (
+              <span key={i} style={{ color: 'grey' }}>
+                {' '}
+                {i}{' '}
+              </span>
+            )
+          })}
         </div>
         <div className={styles.postItemFooter}>
           <span className={styles.footerItem} onClick={(e) => commentPost(e)}>

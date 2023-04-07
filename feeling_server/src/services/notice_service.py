@@ -55,7 +55,6 @@ def get_notice_list(token: str, props: IPagination):
             {
                 '$project': {
                     'fromItems': 0,
-                    'openId': 0,
                     'userId': 0,
                     'banner': 0,
                     'bio': 0,
@@ -89,7 +88,6 @@ def get_notice_list(token: str, props: IPagination):
             },
             {'$project': {
                 'fromItems': 0,
-                'openId': 0,
                 'userId': 0,
                 'banner': 0,
                 'bio': 0,
@@ -122,7 +120,6 @@ def get_notice_list(token: str, props: IPagination):
             },
             {'$project': {
                 'fromItems': 0,
-                'openId': 0,
                 'userId': 0,
                 'banner': 0,
                 'bio': 0,

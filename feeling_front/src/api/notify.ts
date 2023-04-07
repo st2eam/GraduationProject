@@ -4,7 +4,7 @@ import {
   IUpdateNotifyStatus
 } from '@/interfaces/request/notify'
 import { IResp } from '@/interfaces/response'
-import { IResINotifyItem, IUnReadNotify } from '@/interfaces/response/notify'
+import { IResINotifyItem } from '@/interfaces/response/notify'
 import * as request from '@/utils/axios'
 import { getStringifyObj } from '@/utils/qs'
 /**
@@ -43,7 +43,7 @@ export async function deleteNotify({ id = '' }: IDeleteNotify) {
  * @returns
  */
 export async function getHasUnread() {
-  const res = await request.httpGet<IResp<IUnReadNotify>>('/notice/unread')
+  const res = await request.httpGet<IResp<number>>('/notice/unread')
   return res
 }
 /**

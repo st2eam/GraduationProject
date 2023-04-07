@@ -10,6 +10,7 @@ export interface IPostItem extends IPost {
   label: {
     customize?: string[]
   }
+  keywords: string[]
   relate?: {
     post: IPostItem[]
     user: [

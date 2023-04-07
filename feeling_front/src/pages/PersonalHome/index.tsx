@@ -22,7 +22,7 @@ import PostItemSkeleton from '@/components/PostItem/PostItemSkeleton'
 function PersonalHome() {
   const tabs: ITab[] = [
     { key: EPersonalHomeTab.POST, title: '帖子' },
-    { key: EPersonalHomeTab.IMAGE_POST, title: '照片' },
+    { key: EPersonalHomeTab.IMAGE_POST, title: '图片' },
     { key: EPersonalHomeTab.LIKE_POST, title: '喜欢' }
   ]
   const navigate = useNavigate()

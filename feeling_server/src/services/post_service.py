@@ -39,7 +39,6 @@ relatInfo = [
     {'$project': {
         'relate.user._id': 0,
         'relate.user.createdAt': 0,
-        'relate.user.openId': 0,
         'relate.user.banner': 0,
         'relate.user.bio': 0,
         'relate.user.status': 0
@@ -63,7 +62,6 @@ userInfo = [
         '$project': {
             'user._id': 0,
             'user.createdAt': 0,
-            'user.openId': 0,
             'user.banner': 0,
             'user.bio': 0,
             'user.password': 0,
@@ -77,53 +75,6 @@ def get_recommend(token: str, options: IPagination):
     userId = session_service.getSessionBySid(token)['userId']
     user = get_collection('users').find_one({'userId': userId})
     labels = user['labels']
-    follow_option = [
-        *filterDeleted,
-        *userInfo,
-        *relatInfo,
-        {
-            '$lookup': {
-                'from': 'follows',
-                'localField': 'userId',
-                'foreignField': 'followId',
-                'as': 'follow'
-            }
-        },
-        {
-            '$lookup': {
-                'from': 'likes',
-                'localField': '_id',
-                'foreignField': 'postId',
-                'as': 'hasLikes'
-            }
-        },
-        {
-            '$addFields': {
-                'isLike': {'$in': [userId, '$hasLikes.userId']},
-            }
-        },
-        {
-            '$project': {
-                'hasLikes': 0
-            }
-        },
-        {
-            '$match': {
-                '$or': [{'userId': userId}, {'follow.userId': userId}]
-            }
-        },
-        {'$match': {'type': {'$ne': EPostType.Comment.value}}},
-        {
-            '$sort': {
-                '_id': -1
-            }
-        },
-        {
-            '$project': {
-                'follow': 0
-            }
-        }
-    ]
     recommend_option = [
         *filterDeleted,
         *userInfo,
@@ -181,10 +132,6 @@ def get_recommend(token: str, options: IPagination):
     recommend_arr = sorted(temp, key=lambda x: model.wv.n_similarity(
         x['keywords'], labels), reverse=True)
 
-    follow_data_cursor = get_collection('posts').aggregate([*follow_option])
-    follow_arr = [x for x in follow_data_cursor]
-    merged_arr = recommend_arr + follow_arr
-    sorted_arr = sorted(merged_arr, key=lambda x: x['createdAt'], reverse=True)
     items = []
     hasNext = False
     if options.next:
@@ -290,14 +237,18 @@ def create_post(token: str, content: str, imgs: list[str], labels: list[str]):
     doc = " ".join(jieba.cut(content))
     extract_keywords = kw_model.extract_keywords(doc)
     keywords = []
-    keywords.append(result_Classify)
-    for key in result_NER:
-        keywords.extend(result_NER[key])
     for item in extract_keywords:
         keywords.append(item[0])
+
+    for key in result_NER:
+        keywords.extend(result_NER[key])
+
     if labels:
         result_NER.update({'customize': labels})
     keywords = list(set(keywords))
+    increment_count = int(len(keywords)/53*47)
+    for i in range(increment_count):
+        keywords.append(result_Classify)
     userId = session_service.getSessionBySid(token)['userId']
     post = {
         'userId': userId,
