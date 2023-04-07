@@ -148,15 +148,15 @@ const PostItem = (props: IProps) => {
         {post.type === EPostType.Post && (
           <div>
             {'customize' in post.label
-              ? post.label.customize?.map((item) => (
-                  <span key={item} className={styles.keyword}>
+              ? post.label.customize?.map((item, index) => (
+                  <span key={item + index} className={styles.keyword}>
                     # {item}
                   </span>
                 ))
               : null}
           </div>
         )}
-        <div
+        {/* <div
           style={{
             position: 'absolute',
             right: '20px',
@@ -167,15 +167,14 @@ const PostItem = (props: IProps) => {
           {post.classify}
         </div>
         <div>
-          {post.keywords.map((i) => {
+          {post.keywords.map((i, index) => {
             return (
-              <span key={i} style={{ color: 'grey' }}>
-                {' '}
-                {i}{' '}
+              <span key={i + index} style={{ color: 'grey' }}>
+                {' ' + i + ' '}
               </span>
             )
           })}
-        </div>
+        </div> */}
         <div className={styles.postItemFooter}>
           <span className={styles.footerItem} onClick={(e) => commentPost(e)}>
             <MessageOutline className={styles.FooterIcon} />

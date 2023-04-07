@@ -124,7 +124,7 @@ def get_recommend(token: str, options: IPagination):
                 '$and': [
                     {'userId': {'$not': {'$eq': userId}}},
                     {'follow.userId': {'$not': {'$eq': userId}}},
-                    {'haveRecommended': {'$eq': False}}
+                    {'haveRecommended': False}
                 ]
             }
         },
@@ -152,6 +152,9 @@ def get_recommend(token: str, options: IPagination):
     hasNext = False
     if options.next:
         next_index = None
+        post = get_collection('posts').find_one(
+            {'_id': ObjectId(options.next)})
+        recommend_arr = [post]+recommend_arr
         for i, item in enumerate(recommend_arr):
             if str(item['_id']) == options.next:
                 next_index = i + 1

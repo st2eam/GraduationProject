@@ -58,7 +58,7 @@ export function usePosts(page: EPageName, type?: EPersonalHomeTab) {
     async ({ id = '' }: IGetPost) => {
       try {
         let res: IResp<IPostItemResp>
-        if (page === EPageName.HOME) {
+        if (page === EPageName.HOME || page === EPageName.FOLLOW) {
           res = await services[page]({ next })
         } else {
           res = await services[type || EPersonalHomeTab.POST]({ id, next })

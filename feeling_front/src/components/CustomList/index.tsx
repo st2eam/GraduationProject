@@ -58,16 +58,14 @@ function CustomList(props: ICustomList) {
         }}
       >
         <CustomEmpty isEmpty={list.length === 0}>
-          <>
-            {children}
-            <InfiniteScroll
-              loadMore={loadMore}
-              hasMore={hasMore}
-              threshold={threshold}
-            >
-              <InfiniteScrollContent hasMore={hasMore} />
-            </InfiniteScroll>
-          </>
+          {children}
+          <InfiniteScroll
+            loadMore={loadMore}
+            hasMore={hasMore}
+            threshold={threshold}
+          >
+            <InfiniteScrollContent hasMore={hasMore} />
+          </InfiniteScroll>
         </CustomEmpty>
       </PullToRefresh>
     </div>
