@@ -71,7 +71,7 @@ userInfo = [
 ]
 
 
-def get_recommend(token: str, options: IPagination):
+def get_recommend(token: str):
     userId = session_service.getSessionBySid(token)['userId']
     user = get_collection('users').find_one({'userId': userId})
     labels = user['labels']
@@ -148,27 +148,108 @@ def get_recommend(token: str, options: IPagination):
     model = Word2VecModel.get_instance()
     recommend_arr = sorted(temp, key=lambda x: model.wv.n_similarity(
         x['keywords'], labels), reverse=True)
-    items = []
-    hasNext = False
-    if options.next:
-        next_index = None
-        post = get_collection('posts').find_one(
-            {'_id': ObjectId(options.next)})
-        recommend_arr = [post]+recommend_arr
-        for i, item in enumerate(recommend_arr):
-            if str(item['_id']) == options.next:
-                next_index = i + 1
-                break
-        if next_index is None:
-            items = []
-        else:
-            items = recommend_arr[next_index:next_index+options.limit]
-    else:
-        items = recommend_arr[:options.limit]
-    hasNext = len(items) == options.limit
+    items = recommend_arr[:10]
     if (len(items) != 0):
         log_service.addRecommendedPosts(
             userId=userId, postList=map(lambda post: post['_id'], items))
+    return {
+        'items': items
+    }
+
+
+def get_historical_recommend(token: str, options: IPagination):
+    userId = session_service.getSessionBySid(token)['userId']
+    option = [
+        *filterDeleted,
+        *userInfo,
+        *relatInfo,
+        {
+            '$lookup': {
+                'from': 'follows',
+                'localField': 'userId',
+                'foreignField': 'followId',
+                'as': 'follow'
+            }
+        },
+        {
+            '$lookup': {
+                'from': 'recommend',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'recommended'
+            }
+        },
+        {
+            '$lookup': {
+                'from': 'likes',
+                'localField': '_id',
+                'foreignField': 'postId',
+                'as': 'hasLikes'
+            }
+        },
+        {
+            '$addFields': {
+                'isLike': {'$in': [userId, '$hasLikes.userId']},
+            }
+        },
+        {
+            '$addFields': {
+                'haveRecommended': {'$in': [userId, '$recommended.userId']},
+            }
+        },
+        {
+            '$project': {
+                'hasLikes': 0,
+                'recommended': 0
+            }
+        },
+        {
+            '$match': {
+                '$and': [
+                    {'userId': {'$not': {'$eq': userId}}},
+                    {'follow.userId': {'$not': {'$eq': userId}}},
+                    {'haveRecommended': True}
+                ]
+            }
+        },
+        {'$match': {'type': {'$ne': EPostType.Comment.value}}},
+        {
+            '$sort': {
+                '_id': -1
+            }
+        },
+        {
+            '$project': {
+                'follow': 0,
+                'haveRecommended': 0,
+                'user.labels': 0
+            }
+        }
+    ]
+    if bool(options.next):
+        next = get_collection('posts').find_one(
+            {'_id': ObjectId(options.next)})
+        data_cursor = get_collection('posts').aggregate([
+            *option,
+            {
+                '$match': {
+                    'createdAt': {
+                        '$lt': next['createdAt']
+                    }
+                }
+            },
+            {
+                '$limit': options.limit
+            }
+        ])
+    else:
+        data_cursor = get_collection('posts').aggregate([
+            *option, {
+                '$limit': options.limit
+            }
+        ])
+    items = [x for x in data_cursor]
+    hasNext = len(items) == options.limit
     return {
         'items': items,
         'hasNext': hasNext
@@ -768,12 +849,15 @@ def similar(id: str, token: str):
     recommend_data_cursor = get_collection(
         'posts').aggregate([*recommend_option])
     temp = [x for x in recommend_data_cursor]
-    model = Word2VecModel.get_instance()
-    recommend_arr = sorted(temp, key=lambda x: model.wv.n_similarity(
-        x['keywords'], post['keywords']), reverse=True)
-    most_recommended = recommend_arr[0]
-    log_service.addRecommendedPosts(userId=userId, postList=[
-                                    most_recommended['_id']])
+    if len(temp) == 0:
+        return None
+    else:
+        model = Word2VecModel.get_instance()
+        recommend_arr = sorted(temp, key=lambda x: model.wv.n_similarity(
+            x['keywords'], post['keywords']), reverse=True)
+        most_recommended = recommend_arr[0]
+        log_service.addRecommendedPosts(userId=userId, postList=[
+                                        most_recommended['_id']])
     return most_recommended
 
 

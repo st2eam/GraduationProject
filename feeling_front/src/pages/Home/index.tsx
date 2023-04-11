@@ -1,7 +1,7 @@
 import { ReactComponent as NotifyIcon } from '@/assets/icons/notify_outline.svg'
 import { ReactComponent as Logo } from '@/assets/icons/logo.svg'
 import { useUserInfo } from '@/hooks/useUserInfo'
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { usePosts } from '@/hooks/usePosts'
 import { useNavigate } from 'react-router-dom'
 import { useMount, useRequest } from 'ahooks'
@@ -26,9 +26,15 @@ function Home() {
   const { newPost, setNewPost } = useContext(newPostContext)
   const { user } = useUserInfo()
   const navigate = useNavigate()
-  const { posts, hasNext, getPosts, setPosts, loadMore } = usePosts(
-    EPageName.HOME
-  )
+  const {
+    posts,
+    hasNext,
+    getPosts,
+    setPosts,
+    loadMore,
+    get_similar_post,
+    get_recommend_post
+  } = usePosts(EPageName.HOME)
   const {
     posts: followPosts,
     hasNext: hasNextFollow,
@@ -42,6 +48,7 @@ function Home() {
     { key: EHomeTab.FOLLOW, title: '关注' }
   ]
   useMount(() => {
+    append_recommend_posts()
     onRefresh()
   })
   // 请求数据
@@ -55,6 +62,28 @@ function Home() {
       run_follow()
     }
   }, [newPost, run, run_follow])
+
+  const append_similar_posts = useCallback(() => {
+    posts.forEach(async (item, index) => {
+      if (item.isLike) {
+        const res = await get_similar_post(item._id)
+        res && posts.splice(index + 1, 0, res)
+      }
+    })
+  }, [get_similar_post, posts])
+
+  const append_recommend_posts = useCallback(async () => {
+    const res = await get_recommend_post()
+    res &&
+      res.items.length !== 0 &&
+      setPosts((items) => res.items.concat(items))
+  }, [get_recommend_post, setPosts])
+
+  useEffect(() => {
+    if (!loading) {
+      append_similar_posts()
+    }
+  }, [append_similar_posts, loading])
 
   const onRefresh = () => {
     run_follow()
@@ -111,7 +140,7 @@ function Home() {
                 hasMore={hasNext}
                 loadMore={() => loadMore({})}
                 onRefresh={async () => {
-                  getPosts({})
+                  append_recommend_posts()
                   setNewPost('')
                 }}
               >

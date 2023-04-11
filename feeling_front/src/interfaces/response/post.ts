@@ -28,4 +28,8 @@ export interface IPostItemResp {
   hasNext: boolean
 }
 
+export interface IRecommendResp {
+  items: IPostItem[]
+}
+
 export type ICommentResp = IPostItemResp

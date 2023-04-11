@@ -3,10 +3,20 @@ import { IResp } from '@/interfaces/response'
 import {
   ICommentResp,
   IPostItem,
-  IPostItemResp
+  IPostItemResp,
+  IRecommendResp
 } from '@/interfaces/response/post'
 import { ICreate, IGetComment, IPagination } from '@/interfaces/request/post'
 import { getStringifyObj } from '@/utils/qs'
+
+/**
+ * @description 获取推荐列表
+ * @returns IResp<IPostItemResp[]>
+ */
+export async function getRecommendPosts() {
+  const res = await request.httpGet<IResp<IRecommendResp>>('/post/recommend')
+  return res
+}
 
 /**
  * @description 获取首页列表
@@ -15,7 +25,7 @@ import { getStringifyObj } from '@/utils/qs'
  */
 export async function getHomePosts({ next = '', limit = 10 }: IPagination) {
   const res = await request.httpGet<IResp<IPostItemResp>>(
-    '/post/recommend?' + getStringifyObj({ next, limit: String(limit) })
+    '/post/history?' + getStringifyObj({ next, limit: String(limit) })
   )
   return res
 }
@@ -140,5 +150,17 @@ export async function unLikePost({ _id }: { _id: string }) {
   const res = await request.httpPost<IResp>('/post/unlike', {
     id: _id
   })
+  return res
+}
+
+/**
+ * @description 获取相似帖子
+ * @param _id
+ * @returns IResp
+ */
+export async function getSimilarPost(_id: string) {
+  const res = await request.httpGet<IResp<IPostItem>>(
+    '/post/similar?' + getStringifyObj({ _id })
+  )
   return res
 }

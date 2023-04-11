@@ -12,12 +12,21 @@ bp = Blueprint('post', __name__, url_prefix='/api/post')
 # =====================================
 @bp.route('/recommend', methods=["GET"])
 def recommend():
+    res = post_service.get_recommend(request.cookies['token'])
+    return jsonify(ApiResp(data=res))
+
+
+# =====================================
+# @description 历史推荐帖子
+# =====================================
+@bp.route('/history', methods=["GET"])
+def history():
     props = Schema({
         Optional('prev'): str,
         Optional('next'): str,
         Optional('limit'): Use(int)
     }).validate(dict(request.args))
-    res = post_service.get_recommend(
+    res = post_service.get_historical_recommend(
         request.cookies['token'],
         IPagination(
             prev=props.get('prev'),
@@ -26,10 +35,11 @@ def recommend():
         ))
     return jsonify(ApiResp(data=res))
 
-
 # =====================================
 # @description 获取关注列表文章
 # =====================================
+
+
 @bp.route('/following', methods=["GET"])
 def following():
     props = Schema({

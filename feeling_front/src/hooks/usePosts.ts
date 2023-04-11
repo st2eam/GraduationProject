@@ -1,4 +1,9 @@
-import { getHomePosts, getFollowPosts } from '@/api/post'
+import {
+  getHomePosts,
+  getFollowPosts,
+  getSimilarPost,
+  getRecommendPosts
+} from '@/api/post'
 import { EPageName, EPersonalHomeTab } from '@/enums/page'
 import { IPagination } from '@/interfaces/request/post'
 import { IGetImgPost, IGetLikePost, IGetPost } from '@/interfaces/request/user'
@@ -83,11 +88,33 @@ export function usePosts(page: EPageName, type?: EPersonalHomeTab) {
     [next, page, posts, services, type]
   )
 
+  const get_similar_post = useCallback(async (id: string) => {
+    try {
+      const res = await getSimilarPost(id)
+      if (checkWithData(res)) {
+        const { data } = res
+        return data
+      }
+    } catch {}
+  }, [])
+
+  const get_recommend_post = useCallback(async () => {
+    try {
+      const res = await getRecommendPosts()
+      if (checkWithData(res)) {
+        const { data } = res
+        return data
+      }
+    } catch {}
+  }, [])
+
   return {
     posts,
     setPosts,
     hasNext,
     getPosts,
-    loadMore
+    loadMore,
+    get_recommend_post,
+    get_similar_post
   }
 }
