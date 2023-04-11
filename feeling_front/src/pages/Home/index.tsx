@@ -64,13 +64,13 @@ function Home() {
   }, [newPost, run, run_follow])
 
   const append_similar_posts = useCallback(() => {
-    posts.forEach(async (item, index) => {
+    followPosts.forEach(async (item, index) => {
       if (item.isLike) {
         const res = await get_similar_post(item._id)
-        res && posts.splice(index + 1, 0, res)
+        res && followPosts.splice(index + 1, 0, res)
       }
     })
-  }, [get_similar_post, posts])
+  }, [get_similar_post, followPosts])
 
   const append_recommend_posts = useCallback(async () => {
     const res = await get_recommend_post()
@@ -80,10 +80,10 @@ function Home() {
   }, [get_recommend_post, setPosts])
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading_follow) {
       append_similar_posts()
     }
-  }, [append_similar_posts, loading])
+  }, [append_similar_posts, loading_follow])
 
   const onRefresh = () => {
     run_follow()
